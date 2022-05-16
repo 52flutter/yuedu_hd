@@ -24,7 +24,7 @@ class _PageBookShelfState extends State<PageBookShelf>
     with SingleTickerProviderStateMixin {
   var _tabController;
 
-  List<BookShelfBean> _bookList =[];
+  List<BookShelfBean> _bookList = [];
   var _tocHelper = BookTocHelper.getInstance();
 
   var currSortType = 1; //0添加顺序，1上次阅读时间
@@ -143,10 +143,12 @@ class _PageBookShelfState extends State<PageBookShelf>
   }
 
   Widget _buildList(context, bool isPortrait) {
-
     if (_bookList.isEmpty) {
       return Center(
-        child: Text('你的书架空空如也~\n\n\n😀\n\n请先添加书源:\n下方【书源】->点击【添加书源】\n然后点击右下角[+]按钮开始搜索书籍',textAlign: TextAlign.center,),
+        child: Text(
+          '你的书架空空如也~\n\n\n😀\n\n请先添加书源:\n下方【书源】->点击【添加书源】\n然后点击右下角[+]按钮开始搜索书籍',
+          textAlign: TextAlign.center,
+        ),
       );
     }
     return RefreshIndicator(
@@ -161,14 +163,16 @@ class _PageBookShelfState extends State<PageBookShelf>
           removeTop: true,
           child: ScrollConfiguration(
             behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
-              PointerDeviceKind.touch,PointerDeviceKind.mouse
+              PointerDeviceKind.touch,
+              PointerDeviceKind.mouse
             }),
             child: WaterfallFlow.builder(
               physics: AlwaysScrollableScrollPhysics(),
               controller: _scrollController,
               gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
                   crossAxisCount: isPortrait ? 1 : 2),
-              itemBuilder: (ctx, index) => _buildBookItem(ctx, _bookList[index]),
+              itemBuilder: (ctx, index) =>
+                  _buildBookItem(ctx, _bookList[index]),
               itemCount: _bookList.length,
             ),
           ),
@@ -200,41 +204,42 @@ class _PageBookShelfState extends State<PageBookShelf>
             Container(
               color: Colors.grey,
               child: SizedBox(
-                  height: 120,
-                  width: 100,
-                  child:
-                  ExtendedImage.network(
-                    bean.coverUrl,
-                    width: 80,
-                    height: 100,
-                    fit: BoxFit.cover,
-                    cache: true,
-                    borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                    //cancelToken: cancellationToken,
-                  ),
+                height: 120,
+                width: 100,
+                child: ExtendedImage.network(
+                  bean.coverUrl,
+                  width: 80,
+                  height: 100,
+                  retries: 1,
+                  fit: BoxFit.cover,
+                  cache: true,
+                  // loadStateChanged: (),
+                  borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                  //cancelToken: cancellationToken,
+                ),
 
-                  // Image.network(
-                  //   bean.coverUrl,
-                  //   fit: BoxFit.cover,
-                  //   loadingBuilder: (BuildContext context, Widget child,
-                  //       ImageChunkEvent? loadingProgress) {
-                  //     if (loadingProgress == null) return child;
-                  //     return Container(
-                  //       height: 120,
-                  //       width: 100,
-                  //       color: Colors.grey,
-                  //       child: Center(child: Text('loading'),),
-                  //     );
-                  //   },
-                  //   errorBuilder: (BuildContext context, Object exception,
-                  //       StackTrace? stackTrace) {
-                  //     return Container(
-                  //       height: 120,
-                  //       width: 100,
-                  //       color: Colors.grey,
-                  //     );
-                  //   },
-                  // )
+                // Image.network(
+                //   bean.coverUrl,
+                //   fit: BoxFit.cover,
+                //   loadingBuilder: (BuildContext context, Widget child,
+                //       ImageChunkEvent? loadingProgress) {
+                //     if (loadingProgress == null) return child;
+                //     return Container(
+                //       height: 120,
+                //       width: 100,
+                //       color: Colors.grey,
+                //       child: Center(child: Text('loading'),),
+                //     );
+                //   },
+                //   errorBuilder: (BuildContext context, Object exception,
+                //       StackTrace? stackTrace) {
+                //     return Container(
+                //       height: 120,
+                //       width: 100,
+                //       color: Colors.grey,
+                //     );
+                //   },
+                // )
               ),
             ),
             HSpace(8),
@@ -333,12 +338,13 @@ class _PageBookShelfState extends State<PageBookShelf>
   }
 
   void _showDelete(BuildContext context, BookShelfBean bean) {
-    Scaffold.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Row(
         children: <Widget>[
           Icon(
             Icons.delete,
             color: Colors.white,
+            //
           ),
           Text('确定删除 ${bean.bookName} ?')
         ],

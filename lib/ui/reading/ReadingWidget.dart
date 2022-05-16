@@ -1,4 +1,3 @@
-
 import 'dart:collection';
 import 'dart:math';
 import 'dart:ui';
@@ -21,13 +20,14 @@ import 'package:yuedu_hd/ui/reading/event/NextPageEvent.dart';
 import 'package:yuedu_hd/ui/reading/event/PreviousChapterEvent.dart';
 import 'package:yuedu_hd/ui/reading/event/PreviousPageEvent.dart';
 
-class ReadingWidget extends StatefulWidget{
+class ReadingWidget extends StatefulWidget {
   final int bookId;
   final String? initChapterName;
   final double notchHeight;
 
-
-  ReadingWidget(this.bookId, this.initChapterName,{required this.notchHeight,key}):super(key: key);
+  ReadingWidget(this.bookId, this.initChapterName,
+      {required this.notchHeight, key})
+      : super(key: key);
 
   @override
   _ReadingWidgetState createState() => _ReadingWidgetState();
@@ -35,17 +35,16 @@ class ReadingWidget extends StatefulWidget{
 
 class _ReadingWidgetState extends State<ReadingWidget> {
   static const MAX_PAGE = 1999999999;
-  static final INIT_PAGE = (MAX_PAGE/2).ceil();
-
+  static final INIT_PAGE = (MAX_PAGE / 2).ceil();
 
   var tocHelper = BookTocHelper.getInstance();
   var contentHelper = BookContentHelper.getInstance();
   List<BookChapterBean> chaptersList = [];
   var currChapterIndex = 0;
   var initChapterId = -1;
-  var initChapterName;//章节名
-  var initReadPage = 1;//阅读的章节页码，章节内分页，从1开始
-  var displayPageList = LinkedHashMap<int,DisplayPage>();//页码对应显示页面
+  var initChapterName; //章节名
+  var initReadPage = 1; //阅读的章节页码，章节内分页，从1开始
+  var displayPageList = LinkedHashMap<int, DisplayPage>(); //页码对应显示页面
 
   var sizeKey = GlobalKey();
   var size = Size(-1, -1);
@@ -72,53 +71,56 @@ class _ReadingWidgetState extends State<ReadingWidget> {
     _controller = PageController(initialPage: INIT_PAGE);
     DisplayCache.getInstance().clear();
     config = DisplayConfig.getDefault();
-    Future.delayed(Duration(milliseconds: 400),(){
+    Future.delayed(Duration(milliseconds: 400), () {
       _setupData();
     });
     //事件监听
     reloadCallBack = () {
       var pageIndex = ReloadEvent.getInstance().pageIndex;
-      if(pageIndex != -1){//网络错误重新加载
+      if (pageIndex != -1) {
+        //网络错误重新加载
         var errorPage = DisplayCache.getInstance().get(pageIndex);
         print('重新加载...${ReloadEvent.getInstance().pageIndex}');
-        _loadChapter(errorPage!.chapterIndex!, errorPage.viewPageIndex!, errorPage.fromEnd!);
-      }else{//主动刷新章节
+        _loadChapter(errorPage!.chapterIndex!, errorPage.viewPageIndex!,
+            errorPage.fromEnd!);
+      } else {
+        //主动刷新章节
         _reloadChapter();
       }
-
     };
     ReloadEvent.getInstance().addListener(reloadCallBack);
-    nextChapterCallBack = (){
+    nextChapterCallBack = () {
       _nextChapter();
     };
     NextChapterEvent.getInstance().addListener(nextChapterCallBack);
-    previousChapterCallBack = (){
+    previousChapterCallBack = () {
       _previousChapter();
     };
     PreviousChapterEvent.getInstance().addListener(previousChapterCallBack);
-    nextPageCallBack = (){
+    nextPageCallBack = () {
       var target = _controller.page!.ceil() + 1;
-      if(DisplayCache.getInstance().get(target)!=null){
-        if(DisplayConfig.getDefault().animPage){
-          _controller.animateToPage(target,duration: Duration(milliseconds: 300),curve: Curves.ease);
-        }else{
+      if (DisplayCache.getInstance().get(target) != null) {
+        if (DisplayConfig.getDefault().animPage) {
+          _controller.animateToPage(target,
+              duration: Duration(milliseconds: 300), curve: Curves.ease);
+        } else {
           _controller.jumpToPage(target);
         }
       }
     };
     NextPageEvent.getInstance().addListener(nextPageCallBack);
-    previousPageCallBack = (){
+    previousPageCallBack = () {
       var target = _controller.page!.ceil() - 1;
-      if(DisplayCache.getInstance().get(target)!=null){
-        if(DisplayConfig.getDefault().animPage){
-          _controller.animateToPage(target,duration: Duration(milliseconds: 300),curve: Curves.ease);
-        }else{
+      if (DisplayCache.getInstance().get(target) != null) {
+        if (DisplayConfig.getDefault().animPage) {
+          _controller.animateToPage(target,
+              duration: Duration(milliseconds: 300), curve: Curves.ease);
+        } else {
           _controller.jumpToPage(target);
         }
       }
     };
     PreviousPageEvent.getInstance().addListener(previousPageCallBack);
-
 
     super.initState();
   }
@@ -133,22 +135,27 @@ class _ReadingWidgetState extends State<ReadingWidget> {
         child: Stack(
           children: [
             Center(
-              child: Text(errorTips??"(●'◡'●)\n加载中...",style: TextStyle(color: Color(config.textColor)),),
+              child: Text(
+                errorTips ?? "(●'◡'●)\n加载中...",
+                style: TextStyle(color: Color(config.textColor)),
+              ),
             ),
             SizedBox(
               width: double.maxFinite,
               height: double.maxFinite,
-              child: PageView.custom(scrollDirection: config.isVertical==1?Axis.vertical:Axis.horizontal,
+              child: PageView.custom(
+                scrollDirection:
+                    config.isVertical == 1 ? Axis.vertical : Axis.horizontal,
                 pageSnapping: config.isVertical != 1,
-                childrenDelegate: SliverChildBuilderDelegate((ctx,index){
-                  if(index < firstPage){
+                childrenDelegate: SliverChildBuilderDelegate((ctx, index) {
+                  if (index < firstPage) {
                     return _buildErrorIndex();
                   }
                   return DisplayCache.getInstance().get(index);
                 }, childCount: MAX_PAGE),
                 controller: _controller,
-                onPageChanged: (i){
-                  Future.delayed(Duration(milliseconds: 500),(){
+                onPageChanged: (i) {
+                  Future.delayed(Duration(milliseconds: 500), () {
                     notifyPageChanged(i);
                   });
                 },
@@ -159,7 +166,6 @@ class _ReadingWidgetState extends State<ReadingWidget> {
       ),
     );
   }
-
 
   @override
   void dispose() {
@@ -174,42 +180,45 @@ class _ReadingWidgetState extends State<ReadingWidget> {
     PreviousPageEvent.getInstance().removeListener(previousPageCallBack);
   }
 
-  Widget _buildErrorIndex(){
+  Widget _buildErrorIndex() {
     return Container(
       color: Color(config.backgroundColor),
       child: Center(
-        child: Text('💪/(ㄒoㄒ)/~~\n探索到世界的尽头\n少年，不要再翻了',style: TextStyle(fontSize: 20,color: Color(config.textColor)),textAlign: TextAlign.center,),
+        child: Text(
+          '💪/(ㄒoㄒ)/~~\n探索到世界的尽头\n少年，不要再翻了',
+          style: TextStyle(fontSize: 20, color: Color(config.textColor)),
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }
 
-
-  void _setupData() async{
-    if(!mounted||sizeKey.currentContext == null){
-      return;//横竖屏切换的bug
+  void _setupData() async {
+    if (!mounted || sizeKey.currentContext == null) {
+      return; //横竖屏切换的bug
     }
     size = Size.copy(sizeKey.currentContext!.size!);
     print(size);
     bookInfoBean = await _fetchBookInfo();
-    if(widget.initChapterName == null){
+    if (widget.initChapterName == null) {
       initChapterName = bookInfoBean.lastReadChapter;
       initReadPage = bookInfoBean.lastReadPage;
-    }else{
+    } else {
       initChapterName = widget.initChapterName;
       initReadPage = 1;
       //当前章节重新加载的情况下，保存阅读记录
-      if(widget.initChapterName == bookInfoBean.lastReadChapter){
+      if (widget.initChapterName == bookInfoBean.lastReadChapter) {
         initReadPage = bookInfoBean.lastReadPage;
       }
     }
     await _fetchChapters();
   }
 
-  dynamic _fetchBookInfo() async{
+  dynamic _fetchBookInfo() async {
     return DatabaseHelper().queryBookById(widget.bookId);
   }
 
-  dynamic _fetchChapters() async{
+  dynamic _fetchChapters() async {
     //只从数据库获取目录
     var chapters = await tocHelper.getChapterListOnlyDB(widget.bookId);
     chaptersList.clear();
@@ -218,20 +227,21 @@ class _ReadingWidgetState extends State<ReadingWidget> {
   }
 
   ///目录加载完成
-  void _onChaptersLoad() async{
-    if(chaptersList.isEmpty){
+  void _onChaptersLoad() async {
+    if (chaptersList.isEmpty) {
       setState(() {
         errorTips = "本地目录为空，正在获取网络数据...";
       });
       //从网络获取章节
-      chaptersList = await tocHelper.updateChapterList(widget.bookId, -1,onCancelToken: (token){
+      chaptersList = await tocHelper.updateChapterList(widget.bookId, -1,
+          onCancelToken: (token) {
         _tocCancelToken = token;
-      }).catchError((e){
+      }).catchError((e) {
         setState(() {
           errorTips = "目录加载失败，请重试或换源";
         });
       });
-      if(chaptersList == null || chaptersList.isEmpty){
+      if (chaptersList == null || chaptersList.isEmpty) {
         setState(() {
           errorTips = "目录加载失败，请重试或换源";
         });
@@ -239,51 +249,78 @@ class _ReadingWidgetState extends State<ReadingWidget> {
       }
     }
     //当前阅读的章节，找到章节id
-    for(var i =0;i<chaptersList.length;i++){
+    for (var i = 0; i < chaptersList.length; i++) {
       var value = chaptersList[i];
-      if(value.name?.trim() == initChapterName.toString().trim()){
+      if (value.name?.trim() == initChapterName.toString().trim()) {
         initChapterId = value.id;
-        currChapterIndex =i;
+        currChapterIndex = i;
         break;
       }
     }
 
-    if(initChapterId == -1){
+    if (initChapterId == -1) {
       initChapterId = chaptersList[0].id;
       currChapterIndex = 0;
     }
+    //  var id = chaptersList[currChapterIndex].id;
     //获取当前章节内容
-    var splitPages = await _loadChapter(currChapterIndex,INIT_PAGE,false);
+    var splitPages = await _loadChapter(currChapterIndex, INIT_PAGE, false);
     //加载成功跳转页码
     var offsetPage = 0;
-    if(splitPages > 0){
-      offsetPage = min(initReadPage -1, splitPages - 1);
+    if (splitPages > 0) {
+      offsetPage = min(initReadPage - 1, splitPages - 1);
       _controller.jumpToPage(INIT_PAGE + offsetPage);
     }
     notifyPageChanged(INIT_PAGE + offsetPage);
-
   }
+
   ///[fromEnd]为true,[initIndex]为最后一页，需要从后往前填充内容
-  Future<int> _loadChapter(int chapterIndex,int pageIndex,bool fromEnd,{bool refreshCache = false}) async{
-    if(chapterIndex < 0 || chapterIndex >= chaptersList.length){
+  Future<int> _loadChapter(int chapterIndex, int pageIndex, bool fromEnd,
+      {bool refreshCache = false}) async {
+    if (chapterIndex < 0 || chapterIndex >= chaptersList.length) {
       return Future.value(-1);
     }
+
     //先占位加载中页面
-    DisplayCache.getInstance().put(pageIndex, DisplayPage(DisplayPage.STATUS_LOADING, null,chapterIndex: chapterIndex,currPage: 1,viewPageIndex: pageIndex,fromEnd: fromEnd,));
+    DisplayCache.getInstance().put(
+        pageIndex,
+        DisplayPage(
+          DisplayPage.STATUS_LOADING,
+          null,
+          chapterIndex: chapterIndex,
+          currPage: 1,
+          viewPageIndex: pageIndex,
+          fromEnd: fromEnd,
+        ));
     setState(() {
-      if(chapterIndex == 0){
+      if (chapterIndex == 0) {
         firstPage = pageIndex;
       }
     });
+
     //获取正文
-    String chapterContent = await contentHelper.getChapterContent(chaptersList[chapterIndex].id,mayNextChapterId(chapterIndex),refreshCache: refreshCache).catchError((e){
-      DisplayCache.getInstance().put(pageIndex, DisplayPage(DisplayPage.STATUS_ERROR, null,errorMsg:e.toString(),chapterIndex: chapterIndex,currPage: 1,fromEnd: fromEnd,viewPageIndex: pageIndex,));
+    String chapterContent = await contentHelper
+        .getChapterContent(
+            chaptersList[chapterIndex].id, mayNextChapterId(chapterIndex),
+            refreshCache: refreshCache)
+        .catchError((e) {
+      DisplayCache.getInstance().put(
+          pageIndex,
+          DisplayPage(
+            DisplayPage.STATUS_ERROR,
+            null,
+            errorMsg: e.toString(),
+            chapterIndex: chapterIndex,
+            currPage: 1,
+            fromEnd: fromEnd,
+            viewPageIndex: pageIndex,
+          ));
       setState(() {
         //失败?
       });
     });
     //失败?
-    if(chapterContent == null || chapterContent.isEmpty){
+    if (chapterContent == null || chapterContent.isEmpty) {
       return Future.value(-1);
     }
     //-----------------------成功开始分页,制造显示页面---------------------
@@ -294,40 +331,57 @@ class _ReadingWidgetState extends State<ReadingWidget> {
     var pageBreaker = PageBreaker(
         _generateContentTextSpan(chapterContent),
         _generateTitleTextSpan(chaptersList[chapterIndex].name!),
-        _generateTextPageSize()
-    );
-    var pagesList = pageBreaker.splitPage();
+        _generateTextPageSize());
+    await Future.delayed(Duration.zero);
+    var pagesList = await pageBreaker.splitPage();
+    await Future.delayed(Duration.zero);
     //分页完成填充数据
     List<int> batch = [];
 
-    if(config.isSinglePage == 1){
+    if (config.isSinglePage == 1) {
       //------单页------
-      for(var i = 0;i< pagesList.length;i++){
-        var currIndex = pageIndex + (fromEnd?(i+1-pagesList.length):i);
+      for (var i = 0; i < pagesList.length; i++) {
+        var currIndex = pageIndex + (fromEnd ? (i + 1 - pagesList.length) : i);
         batch.add(currIndex);
-        DisplayCache.getInstance().put(currIndex, DisplayPage(DisplayPage.STATUS_SUCCESS, pagesList[i],chapterIndex: chapterIndex,currPage: i+1,maxPage: pagesList.length,));
+        DisplayCache.getInstance().put(
+            currIndex,
+            DisplayPage(
+              DisplayPage.STATUS_SUCCESS,
+              pagesList[i],
+              chapterIndex: chapterIndex,
+              currPage: i + 1,
+              maxPage: pagesList.length,
+            ));
       }
-    }else{
+    } else {
       //------双页------
-      var pageCount = (pagesList.length/2).ceil();
-      for(var i=0;i<pageCount;i++){
-        var currIndex = pageIndex + (fromEnd?(i+1-pageCount):i);
+      var pageCount = (pagesList.length / 2).ceil();
+      for (var i = 0; i < pageCount; i++) {
+        var currIndex = pageIndex + (fromEnd ? (i + 1 - pageCount) : i);
         batch.add(currIndex);
-        var realIndex = 2*i;
-        DisplayCache.getInstance().put(currIndex, DisplayPage(DisplayPage.STATUS_SUCCESS,
-          pagesList[realIndex],text2: realIndex>pagesList.length-2?null:pagesList[realIndex+1],
-          chapterIndex: chapterIndex,currPage: i+1,maxPage: pageCount,));
+        var realIndex = 2 * i;
+        DisplayCache.getInstance().put(
+            currIndex,
+            DisplayPage(
+              DisplayPage.STATUS_SUCCESS,
+              pagesList[realIndex],
+              text2: realIndex > pagesList.length - 2
+                  ? null
+                  : pagesList[realIndex + 1],
+              chapterIndex: chapterIndex,
+              currPage: i + 1,
+              maxPage: pageCount,
+            ));
       }
     }
 
-
-    if(batch.isNotEmpty){
+    if (batch.isNotEmpty) {
       DisplayCache.getInstance().packChapter(batch);
     }
 
     setState(() {
       print('done!');
-      if(fromEnd){
+      if (fromEnd) {
         firstPage = pageIndex - pagesList.length + 1;
       }
     });
@@ -335,19 +389,19 @@ class _ReadingWidgetState extends State<ReadingWidget> {
     return Future.value(pagesList.length);
   }
 
-  int? mayNextChapterId(int chapterIndex){
-    if(chapterIndex >= chaptersList.length -1){
-      return null;//没有下一章节
+  int? mayNextChapterId(int chapterIndex) {
+    if (chapterIndex >= chaptersList.length - 1) {
+      return null; //没有下一章节
     }
-    return chaptersList[chapterIndex+1].id;
+    return chaptersList[chapterIndex + 1].id;
   }
 
   //正文的样式
-  TextSpan _generateContentTextSpan(String chapterContent){
+  TextSpan _generateContentTextSpan(String chapterContent) {
     final textStyle = TextStyle(
       color: Color(config.textColor),
       fontSize: config.textSize,
-      fontWeight: config.isTextBold==1?FontWeight.bold:FontWeight.normal,
+      fontWeight: config.isTextBold == 1 ? FontWeight.bold : FontWeight.normal,
       fontFamily: config.fontPath,
       height: config.lineSpace,
     );
@@ -360,12 +414,12 @@ class _ReadingWidgetState extends State<ReadingWidget> {
   }
 
   //标题的样式
-  TextSpan _generateTitleTextSpan(String title){
+  TextSpan _generateTitleTextSpan(String title) {
     final titleStyle = TextStyle(
-        color: Color(config.titleColor),
-        fontSize: config.titleSize,
-        fontWeight: config.isTitleBold==1?FontWeight.bold:FontWeight.normal,
-        fontFamily: config.fontPath,
+      color: Color(config.titleColor),
+      fontSize: config.titleSize,
+      fontWeight: config.isTitleBold == 1 ? FontWeight.bold : FontWeight.normal,
+      fontFamily: config.fontPath,
     );
     final titleSpan = TextSpan(
       text: title.trim(),
@@ -375,76 +429,89 @@ class _ReadingWidgetState extends State<ReadingWidget> {
   }
 
   //计算分页的大小
-  Size _generateTextPageSize(){
-    var textPageSize = Size(size.width- config.marginLeft - config.marginRight, size.height - config.marginTop - config.marginBottom);//显示区域减去外边距
-    if(config.isSinglePage == 1){//单页
+  Size _generateTextPageSize() {
+    var textPageSize = Size(size.width - config.marginLeft - config.marginRight,
+        size.height - config.marginTop - config.marginBottom); //显示区域减去外边距
+    if (config.isSinglePage == 1) {
+      //单页
       return textPageSize;
-    }else{//双页
-      return Size((textPageSize.width-config.inSizeMargin)/2,textPageSize.height);
+    } else {
+      //双页
+      return Size(
+          (textPageSize.width - config.inSizeMargin) / 2, textPageSize.height);
     }
   }
 
   //滚动到了当前页码
-  void notifyPageChanged(int index){
+  void notifyPageChanged(int index) {
     print('page_index->$index');
     var displayPage = DisplayCache.getInstance().get(index);
-    if(displayPage == null) {
+    if (displayPage == null) {
       return;
     }
+
+    //如果是章节最后一页，加载后一章
+    if (displayPage != null && displayPage.currPage == displayPage.maxPage) {
+      // if (displayPage?.currPage != null &&
+      //     displayPage?.maxPage != null &&
+      //     displayPage.currPage! >= displayPage.maxPage! - 3)
+      {
+        //最后一页,加载下一章节
+        var tempPage = DisplayCache.getInstance().get(index + 1);
+        if (tempPage == null) {
+          //没有缓存加载
+          print('加载下一章节');
+          _loadChapter(displayPage.chapterIndex! + 1, index + 1, false);
+        }
+      }
+    }
+
     var tempChapter = chaptersList[displayPage.chapterIndex!];
-    ChapterChangedEvent.getInstance().emit(tempChapter.name!,tempChapter.id);
+    ChapterChangedEvent.getInstance().emit(tempChapter.name!, tempChapter.id);
     //更新阅读记录
-    if(displayPage.status == DisplayPage.STATUS_SUCCESS){
-      DatabaseHelper().updateLastReadChapter(widget.bookId, chaptersList[displayPage.chapterIndex!].name,displayPage.currPage!);
+    if (displayPage.status == DisplayPage.STATUS_SUCCESS) {
+      DatabaseHelper().updateLastReadChapter(widget.bookId,
+          chaptersList[displayPage.chapterIndex!].name, displayPage.currPage!);
       currChapterIndex = displayPage.chapterIndex!;
     }
 
     //如果是章节第一页，加载前一章
-    if(displayPage!=null && displayPage.currPage == 1){//第一页,加载上一章节
-      var tempPage = DisplayCache.getInstance().get(index-1);
-      if(tempPage==null){
+    if (displayPage != null && displayPage.currPage == 1) {
+      //第一页,加载上一章节
+      var tempPage = DisplayCache.getInstance().get(index - 1);
+      if (tempPage == null) {
         //没有缓存加载
         print('加载上一章节');
-        _loadChapter(displayPage.chapterIndex!-1, index-1, true);
+        _loadChapter(displayPage.chapterIndex! - 1, index - 1, true);
       }
-
     }
     print('page->${displayPage.currPage}/${displayPage.maxPage}');
-    //如果是章节最后一页，加载后一章
-    if(displayPage!=null && displayPage.currPage == displayPage.maxPage){//最后一页,加载下一章节
-      var tempPage = DisplayCache.getInstance().get(index+1);
-      if(tempPage==null){
-        //没有缓存加载
-        print('加载下一章节');
-        _loadChapter(displayPage.chapterIndex!+1, index+1, false);
-      }
-
-    }
-
   }
 
-  void _nextChapter() async{
+  void _nextChapter() async {
     var displayPage = DisplayCache.getInstance().get(_controller.page!.ceil());
-    if(displayPage!.status == DisplayPage.STATUS_SUCCESS && displayPage.chapterIndex! < chaptersList.length - 1){
+    if (displayPage!.status == DisplayPage.STATUS_SUCCESS &&
+        displayPage.chapterIndex! < chaptersList.length - 1) {
       DisplayCache.getInstance().clear();
       firstPage = INIT_PAGE;
-      await _loadChapter(displayPage.chapterIndex!+1, INIT_PAGE, false);
+      await _loadChapter(displayPage.chapterIndex! + 1, INIT_PAGE, false);
       _controller.jumpToPage(INIT_PAGE);
       notifyPageChanged(INIT_PAGE);
     }
   }
 
-  void _reloadChapter() async{
+  void _reloadChapter() async {
     DisplayCache.getInstance().clear();
     firstPage = INIT_PAGE;
-    await _loadChapter(currChapterIndex, INIT_PAGE, false,refreshCache: true);
+    await _loadChapter(currChapterIndex, INIT_PAGE, false, refreshCache: true);
     _controller.jumpToPage(INIT_PAGE);
     notifyPageChanged(INIT_PAGE);
   }
 
-  void _previousChapter() async{
+  void _previousChapter() async {
     var displayPage = DisplayCache.getInstance().get(_controller.page!.ceil());
-    if(displayPage!.status == DisplayPage.STATUS_SUCCESS && displayPage.chapterIndex! > 0){
+    if (displayPage!.status == DisplayPage.STATUS_SUCCESS &&
+        displayPage.chapterIndex! > 0) {
       DisplayCache.getInstance().clear();
       firstPage = INIT_PAGE;
       await _loadChapter(displayPage.chapterIndex! - 1, INIT_PAGE, false);
@@ -452,8 +519,9 @@ class _ReadingWidgetState extends State<ReadingWidget> {
       notifyPageChanged(INIT_PAGE);
     }
   }
+
   //内容净化
-  String _formatContent(String chapterContent){
+  String _formatContent(String chapterContent) {
     var result = chapterContent;
     // print(result);
     //净化连续换行为一个换行
@@ -463,13 +531,10 @@ class _ReadingWidgetState extends State<ReadingWidget> {
     //内容中每个段落开头的空格
     var spaceForParagraph = ' ' * config.spaceParagraph;
     //段落间空行
-    var lineSpace = config.paragraphSpace?'\n':'';
-    result = spaceForParagraph + result.replaceAll('\n', '\n$lineSpace$spaceForParagraph');
-
+    var lineSpace = config.paragraphSpace ? '\n' : '';
+    result = spaceForParagraph +
+        result.replaceAll('\n', '\n$lineSpace$spaceForParagraph');
 
     return result;
   }
-
-
-
 }

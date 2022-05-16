@@ -1,3 +1,10 @@
+/*
+ * @Author: renjie.yin
+ * @Date: 2022-05-16 09:22:41
+ * @LastEditors: renjie.yin
+ * @LastEditTime: 2022-05-16 14:14:34
+ * @Description: 
+ */
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
@@ -54,7 +61,7 @@ class NetworkImageWithoutAuth extends ImageProvider<NetworkImageWithoutAuth> {
     if (bytes.lengthInBytes == 0)
       throw Exception('NetworkImage is an empty file');
 
-    return PaintingBinding.instance!.instantiateImageCodec(bytes);
+    return PaintingBinding.instance.instantiateImageCodec(bytes);
   }
 
   @override
