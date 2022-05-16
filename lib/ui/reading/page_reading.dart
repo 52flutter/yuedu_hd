@@ -4,6 +4,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wakelock/wakelock.dart';
 import 'package:yuedu_hd/db/BookInfoBean.dart';
 import 'package:yuedu_hd/db/databaseHelper.dart';
 import 'package:yuedu_hd/ui/book_source/widget_select_source.dart';
@@ -41,8 +42,8 @@ class _PageReadingState extends State<PageReading> {
   int bookId = -1;
 
   var orientation = Orientation.landscape;
-  var size = Size(-1, -1);//整个手机or窗口的大小
-  var notchHeight = 0.0;//刘海高度
+  var size = Size(-1, -1); //整个手机or窗口的大小
+  var notchHeight = 0.0; //刘海高度
 
   var _readingWidgetKey = GlobalKey();
   late PopupMenu styleMenu;
@@ -52,6 +53,8 @@ class _PageReadingState extends State<PageReading> {
     super.initState();
     //可以竖屏
     _setSystemDirection();
+
+    _setWakelock();
     // SystemChrome.setEnabledSystemUIOverlays([]);
 
     chapterChangedCallBack = () {
@@ -61,8 +64,6 @@ class _PageReadingState extends State<PageReading> {
     };
     ChapterChangedEvent.getInstance().addListener(chapterChangedCallBack);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -85,25 +86,24 @@ class _PageReadingState extends State<PageReading> {
       key: _scaffoldKey,
       body: RawKeyboardListener(
         focusNode: FocusNode(),
-        onKey: (e){
-          if(e is RawKeyDownEvent){
-            if(e.logicalKey.keyId == LogicalKeyboardKey.keyA.keyId){
+        onKey: (e) {
+          if (e is RawKeyDownEvent) {
+            if (e.logicalKey.keyId == LogicalKeyboardKey.keyA.keyId) {
               _hideMenuBar();
               PreviousPageEvent.getInstance().emit();
             }
-            if(e.logicalKey.keyId == LogicalKeyboardKey.keyD.keyId){
+            if (e.logicalKey.keyId == LogicalKeyboardKey.keyD.keyId) {
               _hideMenuBar();
               NextPageEvent.getInstance().emit();
             }
-            if(e.logicalKey.keyId == LogicalKeyboardKey.arrowLeft.keyId){
+            if (e.logicalKey.keyId == LogicalKeyboardKey.arrowLeft.keyId) {
               _hideMenuBar();
               PreviousPageEvent.getInstance().emit();
             }
-            if(e.logicalKey.keyId == LogicalKeyboardKey.arrowRight.keyId){
+            if (e.logicalKey.keyId == LogicalKeyboardKey.arrowRight.keyId) {
               _hideMenuBar();
               NextPageEvent.getInstance().emit();
             }
-
           }
         },
         child: GestureDetector(
@@ -133,9 +133,10 @@ class _PageReadingState extends State<PageReading> {
                   _readingWidgetKey = GlobalKey();
                   orientation = or;
                 }
-                if(or == orientation){//window size changed
+                if (or == orientation) {
+                  //window size changed
                   var currSize = Size.copy(MediaQuery.of(context).size);
-                  if(currSize != size){
+                  if (currSize != size) {
                     size = currSize;
                     _readingWidgetKey = GlobalKey();
                   }
@@ -185,7 +186,7 @@ class _PageReadingState extends State<PageReading> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if(orientation ==Orientation.portrait)
+            if (orientation == Orientation.portrait)
               Container(
                 color: theme.primaryColor,
                 height: notchHeight,
@@ -205,7 +206,7 @@ class _PageReadingState extends State<PageReading> {
                           Navigator.of(context).pop();
                         }),
                   ),
-                  if(!notShowTitle)
+                  if (!notShowTitle)
                     Align(
                       alignment: Alignment.center,
                       child: Row(
@@ -220,17 +221,21 @@ class _PageReadingState extends State<PageReading> {
                                 _previousChapter();
                               }),
                           OrientationBuilder(
-                           builder:(ctx,orn){
-                             return  Container(
-                             constraints: BoxConstraints(maxWidth:orientation == Orientation.landscape?400:80),
-                             child: Text(
-                             currChapterName ?? '加载中...',
-                             style: TextStyle(
-                             color: theme.accentColor, fontSize: 20),
-                             maxLines: 1,
-                             overflow: TextOverflow.ellipsis,
-                             ));
-                           },
+                            builder: (ctx, orn) {
+                              return Container(
+                                  constraints: BoxConstraints(
+                                      maxWidth:
+                                          orientation == Orientation.landscape
+                                              ? 400
+                                              : 80),
+                                  child: Text(
+                                    currChapterName ?? '加载中...',
+                                    style: TextStyle(
+                                        color: theme.accentColor, fontSize: 20),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ));
+                            },
                           ),
                           IconButton(
                               icon: Icon(Icons.chevron_right_outlined,
@@ -246,29 +251,32 @@ class _PageReadingState extends State<PageReading> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-
                         IconButton(
                             icon: Icon(CupertinoIcons.repeat,
                                 color: theme.accentColor),
                             onPressed: () {
                               _showSourceSelectDialog(context);
                             }),
-
                         PopupMenuButton(
                           tooltip: '缓存',
-                          onSelected: (i){
-                            switch(i){
+                          onSelected: (i) {
+                            switch (i) {
                               case 0:
-                                BookDownloader.getInstance().startDownload(bookId);
+                                BookDownloader.getInstance()
+                                    .startDownload(bookId);
                                 break;
                               case 1:
-                                BookDownloader.getInstance().startDownload(bookId,from: currChapterId);
+                                BookDownloader.getInstance()
+                                    .startDownload(bookId, from: currChapterId);
                                 break;
                               case 2:
-                                BookDownloader.getInstance().startDownload(bookId,from: currChapterId,limit: 10);
+                                BookDownloader.getInstance().startDownload(
+                                    bookId,
+                                    from: currChapterId,
+                                    limit: 10);
                                 break;
                             }
-                            BotToast.showText(text:"开始缓存,请到【设置】查看下载进度~");
+                            BotToast.showText(text: "开始缓存,请到【设置】查看下载进度~");
                           },
                           itemBuilder: (ctx) {
                             return [
@@ -323,9 +331,13 @@ class _PageReadingState extends State<PageReading> {
                 children: [
                   Expanded(
                     child: Container(
-                      child: Text(bookInfo == null
-                          ? '获取书籍信息...'
-                          : '${bookInfo!.name}[${bookInfo!.author}] $currChapterName \n${bookInfo!.bookUrl}',maxLines: 3,overflow: TextOverflow.ellipsis,),
+                      child: Text(
+                        bookInfo == null
+                            ? '获取书籍信息...'
+                            : '${bookInfo!.name}[${bookInfo!.author}] $currChapterName \n${bookInfo!.bookUrl}',
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ),
                   IconButton(
@@ -347,7 +359,7 @@ class _PageReadingState extends State<PageReading> {
     var theme = Theme.of(context);
     styleMenu = PopupMenu(
         context: context,
-        contentHeight: min(350, sizeKey.currentContext!.size!.height-100),
+        contentHeight: min(350, sizeKey.currentContext!.size!.height - 100),
         contentWidth: 260,
         backgroundColor: theme.cardColor,
         child: GestureDetector(
@@ -365,7 +377,7 @@ class _PageReadingState extends State<PageReading> {
         _readingWidgetKey = GlobalKey();
         setState(() {});
       },
-      onMoreClick: (){
+      onMoreClick: () {
         styleMenu.dismiss();
         showMenuBar = false;
         _showMoreSettings(context);
@@ -373,27 +385,29 @@ class _PageReadingState extends State<PageReading> {
     );
   }
 
-  void _showMoreSettings(BuildContext context){
-    Navigator.of(context).push(MaterialPageRoute(builder: (context){
+  void _showMoreSettings(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return Scaffold(
-        appBar: AppBar(title: Text('阅读设置'),),
+        appBar: AppBar(
+          title: Text('阅读设置'),
+        ),
         body: SingleChildScrollView(child: MoreStyleSettingsMenu()),
       );
-    })).then((value){
+    })).then((value) {
       showMenuBar = false;
       _readingWidgetKey = GlobalKey();
       //设置方向
       _setSystemDirection();
-      setState(() {
-
-      });
+      // 设置亮度
+      _setWakelock();
+      setState(() {});
     });
   }
 
-  void _setSystemDirection(){
+  void _setSystemDirection() {
     var d = DisplayConfig.getDefault().direction;
-    switch(d){
-      case 0://系统
+    switch (d) {
+      case 0: //系统
         SystemChrome.setPreferredOrientations([
           DeviceOrientation.landscapeLeft,
           DeviceOrientation.landscapeRight,
@@ -401,28 +415,34 @@ class _PageReadingState extends State<PageReading> {
           DeviceOrientation.portraitUp
         ]);
         break;
-      case 1://竖直
-        SystemChrome.setPreferredOrientations([
-          DeviceOrientation.portraitDown,
-          DeviceOrientation.portraitUp
-        ]);
+      case 1: //竖直
+        SystemChrome.setPreferredOrientations(
+            [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
         break;
-      case 2://横屏
+      case 2: //横屏
         SystemChrome.setPreferredOrientations([
           DeviceOrientation.landscapeLeft,
           DeviceOrientation.landscapeRight,
         ]);
         break;
+    }
+  }
 
+  void _setWakelock() async {
+    var d = DisplayConfig.getDefault().wakeLock;
+    if (d) {
+      await Wakelock.toggle(enable: true);
+    } else {
+      await Wakelock.toggle(enable: false);
     }
   }
 
   void _showSourceSelectDialog(BuildContext context) async {
     var result = await showDialog(
         context: context,
-        builder: (ctx)=>Dialog(
-          child: WidgetSelectSource(bookId),
-        ));
+        builder: (ctx) => Dialog(
+              child: WidgetSelectSource(bookId),
+            ));
     if (result != null) {
       //换源以后重新加载
       initChapterName = null;
@@ -441,6 +461,9 @@ class _PageReadingState extends State<PageReading> {
   void dispose() {
     super.dispose();
     ChapterChangedEvent.getInstance().removeListener(chapterChangedCallBack);
+
+    Wakelock.toggle(enable: false);
+
     // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,

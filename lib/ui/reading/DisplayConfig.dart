@@ -1,46 +1,47 @@
-
 //阅读的配置项目
 import 'dart:convert';
 
-class DisplayConfig{
+class DisplayConfig {
   int isSinglePage = 1;
   int isVertical = 0;
-  double marginLeft = 20;//外边距
-  double marginTop = 20;//外边距
-  double marginRight = 20;//外边距
-  double marginBottom = 20;//外边距
+  double marginLeft = 20; //外边距
+  double marginTop = 20; //外边距
+  double marginRight = 20; //外边距
+  double marginBottom = 20; //外边距
 
-  double inSizeMargin = 40;//双页的话，页内边距
-  int backgroundColor = 0xfff5f5f5;//阅读背景色
-  double textSize = 18;//正文字体大小
-  int textColor = 0xff000000;//正文字体颜色
-  double titleSize = 24;//标题大小
-  int titleColor = 0xff000000;//标题颜色
-  double titleMargin = 0;//标题和正文的间距
-  int spaceParagraph = 4;//段落开头空格
+  double inSizeMargin = 40; //双页的话，页内边距
+  int backgroundColor = 0xfff5f5f5; //阅读背景色
+  double textSize = 18; //正文字体大小
+  int textColor = 0xff000000; //正文字体颜色
+  double titleSize = 24; //标题大小
+  int titleColor = 0xff000000; //标题颜色
+  double titleMargin = 0; //标题和正文的间距
+  int spaceParagraph = 4; //段落开头空格
 
-  double lineSpace = 1.2;//行距
-  int isTitleBold = 1;//标题加粗
-  int isTextBold = 0;//正文加粗
-  String? fontPath = "";//选择字体
-  int direction = 0;//0 默认跟随系统，1竖直，2横屏
-  bool animPage = true;//点击翻页是否有动画
-  bool paragraphSpace = false;//段落空行
+  double lineSpace = 1.2; //行距
+  int isTitleBold = 1; //标题加粗
+  int isTextBold = 0; //正文加粗
+  String? fontPath = ""; //选择字体
+  int direction = 0; //0 默认跟随系统，1竖直，2横屏
+  bool animPage = true; //点击翻页是否有动画
+  bool paragraphSpace = false; //段落空行
+
+  bool wakeLock = false; //  常量
 
   static DisplayConfig? _default;
 
-  static DisplayConfig getDefault(){
-    if(_default == null){
+  static DisplayConfig getDefault() {
+    if (_default == null) {
       _default = DisplayConfig._();
     }
     return _default!;
   }
 
-  DisplayConfig._(){
+  DisplayConfig._() {
     //pass
   }
 
-  DisplayConfig.fromMap(Map map){
+  DisplayConfig.fromMap(Map map) {
     isSinglePage = map['isSinglePage'];
     isVertical = map['isVertical'];
 
@@ -62,16 +63,18 @@ class DisplayConfig{
     isTextBold = map['isTextBold'];
     fontPath = map['fontPath'];
     //ext
-    Map<String,dynamic> extConfig = jsonDecode(map['extConfig']??"{}");
-    direction = extConfig['direction']??0;
-    animPage = extConfig['animPage']??true;
-    paragraphSpace = extConfig['paragraphSpace']??false;
+    Map<String, dynamic> extConfig = jsonDecode(map['extConfig'] ?? "{}");
+    direction = extConfig['direction'] ?? 0;
+    animPage = extConfig['animPage'] ?? true;
+    paragraphSpace = extConfig['paragraphSpace'] ?? false;
+
+    wakeLock = extConfig['wakeLock'] ?? false;
 
     _default = this;
   }
 
-  Map<String,dynamic> toMap(){
-    var map = Map<String,dynamic>();
+  Map<String, dynamic> toMap() {
+    var map = Map<String, dynamic>();
     map['isSinglePage'] = isSinglePage;
     map['isVertical'] = isVertical;
     map['marginLeft'] = marginLeft;
@@ -91,10 +94,11 @@ class DisplayConfig{
     map['isTextBold'] = isTextBold;
     map['fontPath'] = fontPath;
 
-    Map<String,dynamic> extConfig = Map();
+    Map<String, dynamic> extConfig = Map();
     extConfig['direction'] = direction;
     extConfig['animPage'] = animPage;
     extConfig['paragraphSpace'] = paragraphSpace;
+    extConfig["wakeLock"] = wakeLock;
 
     map['extConfig'] = jsonEncode(extConfig);
 

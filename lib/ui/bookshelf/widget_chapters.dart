@@ -12,7 +12,8 @@ class ChaptersWidget extends StatefulWidget {
   final String? readChapterName;
   final ItemCallback onTap;
 
-  ChaptersWidget(this.bookId, this.onTap,{this.readChapterName}) : super(key: ValueKey('$bookId|$readChapterName'));
+  ChaptersWidget(this.bookId, this.onTap, {this.readChapterName})
+      : super(key: ValueKey('$bookId|$readChapterName'));
 
   @override
   _ChaptersWidgetState createState() => _ChaptersWidgetState();
@@ -51,15 +52,16 @@ class _ChaptersWidgetState extends State<ChaptersWidget> {
               child: DraggableScrollbar.semicircle(
                   controller: _scrollController,
                   child: ListView.separated(
-                    itemBuilder: (ctx, index){
-                      if(index == 0){
+                    itemBuilder: (ctx, index) {
+                      if (index == 0) {
                         return Container(
                           key: _itemKey,
                           child: _buildChapterItem(ctx, chaptersList[index]),
                         );
                       }
                       return _buildChapterItem(ctx, chaptersList[index]);
-                    },separatorBuilder: (ctx, index) => Divider(
+                    },
+                    separatorBuilder: (ctx, index) => Divider(
                       height: 0.5,
                       thickness: 0.5,
                     ),
@@ -76,7 +78,7 @@ class _ChaptersWidgetState extends State<ChaptersWidget> {
   Widget _buildChapterItem(BuildContext context, BookChapterBean bean) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: (){
+      onTap: () {
         widget.onTap(bean);
         Navigator.of(context).pop(bean.name);
       },
@@ -85,14 +87,27 @@ class _ChaptersWidgetState extends State<ChaptersWidget> {
         padding: EdgeInsets.all(10),
         child: Row(
           children: [
-            Expanded(child: Text('${bean.name}',maxLines: 1,overflow: TextOverflow.ellipsis,)),
-            if(bean.name == widget.readChapterName)
+            Expanded(
+                child: Text(
+              '${bean.name}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            )),
+            if (bean.name == widget.readChapterName)
               Padding(
                 padding: const EdgeInsets.only(right: 8),
-                child: Icon(Icons.adjust,size: 18,color: Colors.blueGrey,),
+                child: Icon(
+                  Icons.adjust,
+                  size: 18,
+                  color: Colors.blueGrey,
+                ),
               ),
-            if(bean.length != null)
-              Icon(Icons.cloud_done,size: 16,color: Colors.grey,),
+            if (bean.length != null)
+              Icon(
+                Icons.cloud_done,
+                size: 16,
+                color: Colors.grey,
+              ),
           ],
         ),
       ),
@@ -107,34 +122,34 @@ class _ChaptersWidgetState extends State<ChaptersWidget> {
     await tocHelper.getChapterList(widget.bookId, (chapters) {
       chaptersList.clear();
       chaptersList.addAll(chapters);
-      if(this.mounted){
+      if (this.mounted) {
         setState(() {
-          if(chaptersList.isNotEmpty){
+          if (chaptersList.isNotEmpty) {
             _showLoading = false;
-            Future.delayed(Duration(milliseconds: 100),(){_scrollToRead();});
+            Future.delayed(Duration(milliseconds: 100), () {
+              _scrollToRead();
+            });
           }
         });
       }
     });
   }
 
-  _scrollToRead(){
+  _scrollToRead() {
     //章节滚动
     var index = 0;
-    for (var i=0;i<chaptersList.length;i++) {
+    for (var i = 0; i < chaptersList.length; i++) {
       var chapter = chaptersList[i];
-      if(chapter.name == widget.readChapterName){
+      if (chapter.name == widget.readChapterName) {
         index = i;
         break;
       }
-    }//for
+    } //for
     var eachHeight = _itemKey.currentContext?.size?.height;
-    if(eachHeight !=null){
-      _scrollController.jumpTo(index * (eachHeight));
-      setState(() {
-
-      });
+    if (eachHeight != null) {
+      _scrollController.animateTo(index * (eachHeight),
+          duration: const Duration(seconds: 1), curve: Curves.ease);
+      setState(() {});
     }
-
   }
 }

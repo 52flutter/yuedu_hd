@@ -1,5 +1,3 @@
-
-
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +6,7 @@ import 'package:yuedu_hd/ui/YDRouter.dart';
 import 'package:yuedu_hd/ui/download/page_download.dart';
 import 'package:yuedu_hd/ui/settings/MoreStyleSettingsMenu.dart';
 
-class PageSettings extends StatefulWidget{
+class PageSettings extends StatefulWidget {
   @override
   _PageSettingsState createState() => _PageSettingsState();
 }
@@ -27,22 +25,59 @@ class _PageSettingsState extends State<PageSettings> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(margin: EdgeInsets.only(top: 10,bottom: 10),child: Text('下载管理',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),)),
+                  Container(
+                      margin: EdgeInsets.only(top: 10, bottom: 10),
+                      child: Text(
+                        '下载管理',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20),
+                      )),
                   DownloadInfoWidget(),
-                  Container(margin: EdgeInsets.only(top: 10,bottom: 10),child: Text('数据缓存',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),)),
-                  ListTile(title: Text("数据库"),subtitle: Text("点击清空书源和书籍缓存"),trailing: Icon(Icons.delete_forever_rounded),onTap: () async{
-                    var result = await _showClearDatabaseDialog(context);
-                    if(result == "done"){
-                      await DatabaseHelper().clearAllData();
-                      BotToast.showText(text: "清除成功!");
-                    }
-                  },),
-                  Container(margin: EdgeInsets.only(top: 10,bottom: 10),child: Text('阅读设置',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),)),
+                  Container(
+                      margin: EdgeInsets.only(top: 10, bottom: 10),
+                      child: Text(
+                        '数据缓存',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20),
+                      )),
+                  ListTile(
+                    title: Text("数据库"),
+                    subtitle: Text("点击清空书源和书籍缓存"),
+                    trailing: Icon(Icons.delete_forever_rounded),
+                    onTap: () async {
+                      var result = await _showClearDatabaseDialog(context);
+                      if (result == "done") {
+                        await DatabaseHelper().clearAllData();
+                        BotToast.showText(text: "清除成功!");
+                      }
+                    },
+                  ),
+                  Container(
+                      margin: EdgeInsets.only(top: 10, bottom: 10),
+                      child: Text(
+                        '阅读设置',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20),
+                      )),
                   MoreStyleSettingsMenu(),
-                  Container(margin: EdgeInsets.only(top: 10,bottom: 10),child: Text('关于',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),)),
-                  AboutListTile(applicationName: '三目阅读',applicationVersion: 'ver 2.4.0',applicationLegalese: '开源地址\nhttps://github.com/huage2580/yuedu_hd\n参考实现[阅读安卓版]:\n https://github.com/gedoor/legado\nqq群：558016293',),
-                  ListTile(title: Text('用户协议'),trailing: Icon(Icons.arrow_forward_ios_rounded),onTap: (){
-                    pushTextPage('用户协议', '''
+                  Container(
+                      margin: EdgeInsets.only(top: 10, bottom: 10),
+                      child: Text(
+                        '关于',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20),
+                      )),
+                  AboutListTile(
+                    applicationName: '书探',
+                    applicationVersion: 'ver 2.4.0',
+                    applicationLegalese:
+                        '开源地址\nhttps://github.com/huage2580/yuedu_hd\n参考实现[阅读安卓版]:\n https://github.com/gedoor/legado\nqq群：558016293',
+                  ),
+                  ListTile(
+                    title: Text('用户协议'),
+                    trailing: Icon(Icons.arrow_forward_ios_rounded),
+                    onTap: () {
+                      pushTextPage('用户协议', '''
 4.10 您了解并同意，本平台不对因下述任一情况而导致您的任何损害赔偿承担责任，包括但不限于利润财产、商誉、数据等方面的损失或其它损失的损害赔偿(无论本平台是否已被告知该等损害赔偿的可能性)：
 4.10.1 使用或未能使用本平台服务；
 4.10.2 第三方未经批准或授权即使用您的账户或更改您的数据；
@@ -53,9 +88,13 @@ class _PageSettingsState extends State<PageSettings> {
 4.11 在何种情况下，本平台均不对由于信息网络正常的设备维护，信息网络连接故障，电脑、通讯或其他系统的故障，电力故障，罢工，劳动争议，暴乱，起义，骚乱，生产力或生产资料不足，火灾，洪水，风暴，爆炸，战争，政府行为，司法行政机关的命令或第三方机构的不作为而造成的不能服务或延迟服务承担责任。
                     
                     ''');
-                  },),
-                  ListTile(title: Text('隐私协议'),trailing: Icon(Icons.arrow_forward_ios_rounded),onTap: (){
-                    pushTextPage('三目阅读隐私政策', '''
+                    },
+                  ),
+                  ListTile(
+                    title: Text('隐私协议'),
+                    trailing: Icon(Icons.arrow_forward_ios_rounded),
+                    onTap: () {
+                      pushTextPage('三目阅读隐私政策', '''
 三目阅读隐私政策
 三目阅读尊重并保护所有使用服务用户的个人隐私权。为了给您提供更准确、更有个性化的服务，三目阅读会按照本隐私权政策的规定使用和披露您的个人信息。但三目阅读将以高度的勤勉、审慎义务对待这些信息。除本隐私权政策另有规定外，在未征得您事先许可的情况下，三目阅读不会将这些信息对外披露或向第三方提供。三目阅读会不时更新本隐私权政策。您在同意三目阅读服务使用协议之时，即视为您已经同意本隐私权政策全部内容。本隐私权政策属于三目阅读服务使用协议不可分割的一部分。
 
@@ -171,10 +210,14 @@ Reading HD account has security protection function, please keep your user name 
 When using the reading HD network service to conduct online transactions, you will inevitably disclose your personal information, such as contact information or postal address, to the counterparty or potential counterparty. Please properly protect your personal information and only provide it to others when necessary. If you find that your personal information has been leaked, especially when reading HD username and password are leaked, please contact the reading HD customer service immediately so that reading HD can take corresponding measures.
                     
                     ''');
-                  },),
-                  ListTile(title: Text('免责声明'),trailing: Icon(Icons.arrow_forward_ios_rounded),onTap: (){
-                    pushTextPage('免责声明', '''
-                    三目阅读(以下简称为阅读)是一款提供网络文学搜索的工具，为广大网络文学爱好者提供一种方便、快捷舒适的试读体验。
+                    },
+                  ),
+                  ListTile(
+                    title: Text('免责声明'),
+                    trailing: Icon(Icons.arrow_forward_ios_rounded),
+                    onTap: () {
+                      pushTextPage('免责声明', '''
+                    书探(以下简称为阅读)是一款提供网络文学搜索的工具，为广大网络文学爱好者提供一种方便、快捷舒适的试读体验。
 
 当您搜索一本书的时，阅读会将该书的书名以关键词的形式提交到各个第三方网络文学网站。 各第三方网站返回的内容与阅读无关，阅读对其概不负责，亦不承担任何法律责任。 任何通过使用阅读而链接到的第三方网页均系他人制作或提供，您可能从第三方网页上获得其他服务， 阅读对其合法性概不负责，亦不承担任何法律责任。 第三方搜索引擎结果根据您提交的书名自动搜索获得并提供试读， 不代表阅读赞成或被搜索链接到的第三方网页上的内容或立场。 您应该对使用搜索引擎的结果自行承担风险。
 
@@ -185,7 +228,8 @@ When using the reading HD network service to conduct online transactions, you wi
 阅读鼓励广大小说爱好者通过阅读发现优秀网络小说及其提供商， 并建议阅读正版图书。 任何单位或个人认为通过阅读搜索链接到的第三方网页内容可能涉嫌侵犯其信息网络传播权， 应该及时向阅读提出书面权力通知，并提供身份证明、权属证明及详细侵权情况证明。 阅读在收到上述法律文件后，将会依法尽快断开相关链接内容。
                     
                     ''');
-                  },),
+                    },
+                  ),
                 ],
               ),
             ),
@@ -195,30 +239,42 @@ When using the reading HD network service to conduct online transactions, you wi
     );
   }
 
-  void pushTextPage(String title,String text){
-    YDRouter.mainRouter.currentState?.push(MaterialPageRoute(builder: (context){
+  void pushTextPage(String title, String text) {
+    YDRouter.mainRouter.currentState
+        ?.push(MaterialPageRoute(builder: (context) {
       return Scaffold(
-        appBar: AppBar(title: Text(title),),
+        appBar: AppBar(
+          title: Text(title),
+        ),
         body: CupertinoScrollbar(
           child: SingleChildScrollView(
-            child: Container(margin: EdgeInsets.all(16),child: Text(text)),
+            child: Container(margin: EdgeInsets.all(16), child: Text(text)),
           ),
         ),
       );
     }));
   }
 
-  dynamic _showClearDatabaseDialog(context) async{
-    return await showDialog(context: context, builder: (context){
-      return AlertDialog(title: Text("警告"),content: Text("确定清除所有书源和书籍？"),actions: [
-        TextButton(onPressed: (){
-          Navigator.of(context).pop('cancel');
-        }, child: Text('不了不了')),
-        TextButton(onPressed: (){
-          Navigator.of(context).pop('done');
-        }, child: Text('确定')),
-      ],);
-    });
+  dynamic _showClearDatabaseDialog(context) async {
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("警告"),
+            content: Text("确定清除所有书源和书籍？"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop('cancel');
+                  },
+                  child: Text('不了不了')),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop('done');
+                  },
+                  child: Text('确定')),
+            ],
+          );
+        });
   }
-
 }

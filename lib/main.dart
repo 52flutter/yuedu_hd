@@ -1,3 +1,10 @@
+/*
+ * @Author: renjie.yin
+ * @Date: 2022-05-16 09:22:41
+ * @LastEditors: renjie.yin
+ * @LastEditTime: 2022-05-16 11:57:24
+ * @Description: 
+ */
 import 'dart:io';
 import 'dart:ui';
 
@@ -14,7 +21,7 @@ import 'package:sqflite/sqflite.dart';
 
 import 'ui/style/ycolors.dart';
 
-void main() async{
+void main() async {
   if (Platform.isWindows || Platform.isLinux) {
     // Initialize FFI
     sqfliteFfiInit();
@@ -40,7 +47,7 @@ class MyApp extends StatelessWidget {
       builder: BotToastInit(), //1. call BotToastInit
       navigatorObservers: [BotToastNavigatorObserver()],
       navigatorKey: YDRouter.mainRouter,
-      title: '三目阅读',
+      title: '书探',
       theme: ThemeData(
         // This is the theme of your application.
         primaryColor: YColors.primary,
@@ -56,10 +63,9 @@ class MyApp extends StatelessWidget {
         // the app on. For desktop platforms, the controls will be smaller and
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
-
       ),
-      routes: <String,WidgetBuilder>{
-        YDRouter.READING_PAGE:(context)=>PageReading(),
+      routes: <String, WidgetBuilder>{
+        YDRouter.READING_PAGE: (context) => PageReading(),
       },
       home: HomePage(),
     );
@@ -70,8 +76,8 @@ class MyCustomScrollBehavior extends MaterialScrollBehavior {
   // Override behavior methods and getters like dragDevices
   @override
   Set<PointerDeviceKind> get dragDevices => {
-    PointerDeviceKind.touch,
-    PointerDeviceKind.mouse,
-    // etc.
-  };
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        // etc.
+      };
 }
