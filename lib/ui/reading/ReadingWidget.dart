@@ -527,6 +527,9 @@ class _ReadingWidgetState extends State<ReadingWidget> {
 
   //内容净化
   String _formatContent(String chapterContent) {
+    if (config.replaceContent == false) {
+      return chapterContent;
+    }
     var result = chapterContent;
     // print(result);
     //净化连续换行为一个换行

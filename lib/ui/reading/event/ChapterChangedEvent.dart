@@ -2,7 +2,7 @@
  * @Author: renjie.yin
  * @Date: 2022-05-16 09:22:41
  * @LastEditors: renjie.yin
- * @LastEditTime: 2022-05-19 20:14:04
+ * @LastEditTime: 2022-05-19 20:51:34
  * @Description: 
  */
 import 'package:flutter/cupertino.dart';
@@ -33,9 +33,9 @@ class ChapterChangedEvent extends ChangeNotifier {
       int currChapterIndex) {
     chapterName = name;
     chapterId = cid;
-    url = url;
-    chapterTotal = chapterTotal;
-    currChapterIndex = currChapterIndex;
+    this.url = url;
+    this.chapterTotal = chapterTotal;
+    this.currChapterIndex = currChapterIndex;
     notifyListeners();
   }
 }

@@ -27,6 +27,8 @@ class DisplayConfig {
   bool paragraphSpace = false; //段落空行
 
   bool wakeLock = false; //  常量
+// 净化
+  bool replaceContent = true;
 
   static DisplayConfig? _default;
 
@@ -70,6 +72,8 @@ class DisplayConfig {
 
     wakeLock = extConfig['wakeLock'] ?? false;
 
+    replaceContent = extConfig['replaceContent'] ?? true;
+
     _default = this;
   }
 
@@ -99,6 +103,7 @@ class DisplayConfig {
     extConfig['animPage'] = animPage;
     extConfig['paragraphSpace'] = paragraphSpace;
     extConfig["wakeLock"] = wakeLock;
+    extConfig["replaceContent"] = replaceContent;
 
     map['extConfig'] = jsonEncode(extConfig);
 

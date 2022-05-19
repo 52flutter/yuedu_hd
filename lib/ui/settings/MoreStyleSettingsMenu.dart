@@ -272,6 +272,16 @@ class _MoreStyleSettingsMenuState extends State<MoreStyleSettingsMenu> {
             _saveConfig();
           },
         ),
+        // 常亮度
+        SwitchListTile(
+          title: Text('净化内容'),
+          activeColor: theme.primaryColor,
+          value: config.replaceContent,
+          onChanged: (b) {
+            config.replaceContent = b;
+            _saveConfig();
+          },
+        ),
       ],
     );
   }

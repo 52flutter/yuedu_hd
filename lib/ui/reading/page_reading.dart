@@ -193,7 +193,9 @@ class _PageReadingState extends State<PageReading> {
       progressNum = progressNum < 0 ? 0 : progressNum;
       progress = progressNum.toStringAsFixed(2);
     } catch (ex) {}
-
+    if (progress != "") {
+      progress = progress + "%";
+    }
     return Visibility(
       visible: showMenuBar,
       child: Container(
@@ -352,14 +354,15 @@ class _PageReadingState extends State<PageReading> {
                           var url = currChapterUrl ?? bookInfo!.bookUrl ?? "";
                           final Uri? _url = Uri.tryParse(url.trimLeft());
                           if (_url != null && _url != "") {
-                            launchUrl(_url);
+                            launchUrl(_url,
+                                mode: LaunchMode.externalApplication);
                           }
                         },
                         child: Container(
                           child: Text(
                             bookInfo == null
                                 ? '获取书籍信息...'
-                                : '${bookInfo!.name}[${bookInfo!.author}] $currChapterName \n${currChapterUrl ?? bookInfo!.bookUrl} $progress%',
+                                : '${bookInfo!.name}[${bookInfo!.author}] $currChapterName \n${currChapterUrl ?? bookInfo!.bookUrl} $progress',
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                           ),
