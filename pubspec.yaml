@@ -58,6 +58,8 @@ dependencies:
   #扩展的图片，用来支持本地缓存
   extended_image: ^4.0.0
 
+  url_launcher: ^6.1.2
+
   wakelock: ^0.6.1+2
 
 dev_dependencies:
@@ -92,6 +94,9 @@ flutter:
     - family: fz_song
       fonts:
         - asset: assets/fz_song.ttf
+    - family: ReadFont
+      fonts:
+        - asset: assets/ReadFont.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

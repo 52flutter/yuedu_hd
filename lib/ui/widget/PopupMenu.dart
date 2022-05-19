@@ -1,12 +1,9 @@
-
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 final Color darkBlue = Color.fromARGB(255, 18, 32, 47);
 typedef PopupMenuStateChanged = Function(bool isShow);
-
 
 class PopupMenu {
   final double contentWidth;
@@ -42,19 +39,19 @@ class PopupMenu {
   bool get isShow => _isShow;
 
   //if it's not full screen, set offset:
-  double offsetX=0;
+  double offsetX = 0;
 
   PopupMenu(
       {double? offsetX,
-        required this.contentWidth,
-        required this.contentHeight,
-        required BuildContext context,
-        VoidCallback? onDismiss,
-        Color? backgroundColor,
-        Color? highlightColor,
-        Color? lineColor,
-        PopupMenuStateChanged? stateChanged,
-        Widget? child}) {
+      required this.contentWidth,
+      required this.contentHeight,
+      required BuildContext context,
+      VoidCallback? onDismiss,
+      Color? backgroundColor,
+      Color? highlightColor,
+      Color? lineColor,
+      PopupMenuStateChanged? stateChanged,
+      Widget? child}) {
     this.offsetX = offsetX ?? 0;
     this.dismissCallback = onDismiss;
     this.stateChanged = stateChanged;

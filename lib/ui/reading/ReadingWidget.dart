@@ -1,6 +1,5 @@
 import 'dart:collection';
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
@@ -451,23 +450,29 @@ class _ReadingWidgetState extends State<ReadingWidget> {
     }
 
     //如果是章节最后一页，加载后一章
-    if (displayPage != null && displayPage.currPage == displayPage.maxPage) {
-      // if (displayPage?.currPage != null &&
-      //     displayPage?.maxPage != null &&
-      //     displayPage.currPage! >= displayPage.maxPage! - 3)
-      {
-        //最后一页,加载下一章节
-        var tempPage = DisplayCache.getInstance().get(index + 1);
-        if (tempPage == null) {
-          //没有缓存加载
-          print('加载下一章节');
-          _loadChapter(displayPage.chapterIndex! + 1, index + 1, false);
-        }
+    // if (displayPage != null && displayPage.currPage == displayPage.maxPage) {
+    if (displayPage.currPage != null &&
+        displayPage.maxPage != null &&
+        displayPage.currPage! >= displayPage.maxPage! - 5) {
+      var id = index +
+          (displayPage.maxPage!.toInt() - (displayPage.currPage!.toInt()));
+      //最后一页,加载下一章节
+      var tempPage = DisplayCache.getInstance().get(id + 1);
+      if (tempPage == null) {
+        //没有缓存加载
+        print('加载下一章节');
+        _loadChapter(displayPage.chapterIndex! + 1, id + 1, false);
       }
     }
 
     var tempChapter = chaptersList[displayPage.chapterIndex!];
-    ChapterChangedEvent.getInstance().emit(tempChapter.name!, tempChapter.id);
+    ChapterChangedEvent.getInstance().emit(
+      tempChapter.name!,
+      tempChapter.id,
+      tempChapter.url ?? "",
+      chaptersList.length,
+      displayPage.chapterIndex ?? 0,
+    );
     //更新阅读记录
     if (displayPage.status == DisplayPage.STATUS_SUCCESS) {
       DatabaseHelper().updateLastReadChapter(widget.bookId,

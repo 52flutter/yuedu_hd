@@ -281,6 +281,7 @@ class _MoreStyleSettingsMenuState extends State<MoreStyleSettingsMenu> {
     var fonts = [
       {"name": "默认字体", "font": ""},
       {"name": "鸿蒙HarmonyOS", "font": "HarmonyOS_Sans"},
+      {"name": "ReadFont", "font": "ReadFont"},
       {"name": "方正仿宋简体", "font": "fz_song"},
       {"name": "方正楷体简体", "font": "fz_kai"},
       {"name": "汉字拼音体", "font": "Hanzi-Pinyin"},

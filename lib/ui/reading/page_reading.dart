@@ -4,6 +4,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:yuedu_hd/db/BookInfoBean.dart';
 import 'package:yuedu_hd/db/databaseHelper.dart';
@@ -21,6 +22,7 @@ import 'package:yuedu_hd/ui/reading/event/ReloadEvent.dart';
 import 'package:yuedu_hd/ui/settings/MoreStyleSettingsMenu.dart';
 import 'package:yuedu_hd/ui/widget/PopupMenu.dart';
 
+import '../../db/bookChapterBean.dart';
 import 'StyleMenuWidget.dart';
 
 class PageReading extends StatefulWidget {
@@ -36,7 +38,10 @@ class _PageReadingState extends State<PageReading> {
   var initChapterName;
   var currChapterName;
   var currChapterId;
+  var currChapterUrl;
+  var chapterTotal;
   var chapterChangedCallBack;
+  var currChapterIndex;
 
   BookInfoBean? bookInfo;
   int bookId = -1;
@@ -59,7 +64,10 @@ class _PageReadingState extends State<PageReading> {
 
     chapterChangedCallBack = () {
       currChapterName = ChapterChangedEvent.getInstance().chapterName;
+      chapterTotal = ChapterChangedEvent.getInstance().chapterTotal;
+      currChapterUrl = ChapterChangedEvent.getInstance().url;
       currChapterId = ChapterChangedEvent.getInstance().chapterId;
+      currChapterIndex = ChapterChangedEvent.getInstance().currChapterIndex;
       setState(() {});
     };
     ChapterChangedEvent.getInstance().addListener(chapterChangedCallBack);
@@ -177,6 +185,14 @@ class _PageReadingState extends State<PageReading> {
   Widget _buildMenuBar(BuildContext context, ThemeData theme) {
     var menuBarWidth = size.width;
     var notShowTitle = menuBarWidth < 600;
+
+    var progress = "";
+    try {
+      var progressNum = (currChapterIndex / (chapterTotal) * 100);
+      progressNum = progressNum > 100 ? 100 : progressNum;
+      progressNum = progressNum < 0 ? 0 : progressNum;
+      progress = progressNum.toStringAsFixed(2);
+    } catch (ex) {}
 
     return Visibility(
       visible: showMenuBar,
@@ -330,13 +346,24 @@ class _PageReadingState extends State<PageReading> {
               child: Row(
                 children: [
                   Expanded(
-                    child: Container(
-                      child: Text(
-                        bookInfo == null
-                            ? '获取书籍信息...'
-                            : '${bookInfo!.name}[${bookInfo!.author}] $currChapterName \n${bookInfo!.bookUrl}',
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
+                    child: Ink(
+                      child: InkWell(
+                        onTap: () {
+                          var url = currChapterUrl ?? bookInfo!.bookUrl ?? "";
+                          final Uri? _url = Uri.tryParse(url.trimLeft());
+                          if (_url != null && _url != "") {
+                            launchUrl(_url);
+                          }
+                        },
+                        child: Container(
+                          child: Text(
+                            bookInfo == null
+                                ? '获取书籍信息...'
+                                : '${bookInfo!.name}[${bookInfo!.author}] $currChapterName \n${currChapterUrl ?? bookInfo!.bookUrl} $progress%',
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
                       ),
                     ),
                   ),
