@@ -43,6 +43,8 @@ class HomeState extends State<HomePage> {
     super.initState();
   }
 
+  DateTime? _lastPressed;
+
   @override
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
@@ -51,14 +53,29 @@ class HomeState extends State<HomePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: themeData.backgroundColor,
-      body: OrientationBuilder(
-        builder: (context, orientation) {
-          if (orientation == Orientation.landscape) {
-            return _buildLandscape(context, themeData, isIOS);
+      body: WillPopScope(
+        onWillPop: () async {
+          if (_lastPressed == null ||
+              DateTime.now().difference(_lastPressed as DateTime) >
+                  const Duration(seconds: 1)) {
+            //两次点击间隔超过1秒则重新计时
+            _lastPressed = DateTime.now();
+            BotToast.showText(text: "再按一次退出");
+            return Future.value(false);
           } else {
-            return _buildPortrait(context, themeData, isIOS);
+            _lastPressed = DateTime.now();
+            return Future.value(true);
           }
         },
+        child: OrientationBuilder(
+          builder: (context, orientation) {
+            if (orientation == Orientation.landscape) {
+              return _buildLandscape(context, themeData, isIOS);
+            } else {
+              return _buildPortrait(context, themeData, isIOS);
+            }
+          },
+        ),
       ),
     );
   }

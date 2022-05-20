@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -48,34 +49,58 @@ class _PageStoreState extends State<PageStore> {
     super.initState();
   }
 
+  DateTime? _lastPressed;
+
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     return Scaffold(
-      body: Container(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  IconButton(
+      body: WillPopScope(
+        onWillPop: () async {
+          if (_lastPressed == null ||
+              DateTime.now().difference(_lastPressed as DateTime) >
+                  const Duration(seconds: 1)) {
+            //两次点击间隔超过1秒则重新计时
+            _lastPressed = DateTime.now();
+            if ((await _controller?.canGoBack()) == true) {
+              await _controller?.goBack();
+            } else {
+              BotToast.showText(text: "再按一次退出");
+            }
+            return Future.value(false);
+          } else {
+            _lastPressed = DateTime.now();
+            return Future.value(true);
+          }
+        },
+        child: Container(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    IconButton(
                       onPressed: () {
-                        _controller?.canGoBack().then((value) {
-                          if (value) {
-                            _controller?.goBack();
-                          }
-                        });
+                        _controller?.canGoBack().then(
+                          (value) {
+                            if (value) {
+                              _controller?.goBack();
+                            }
+                          },
+                        );
                       },
-                      icon: Icon(Icons.arrow_back_ios_new)),
-                  Expanded(child: _buildLinkInput(theme)),
-                ],
+                      icon: Icon(Icons.arrow_back_ios_new),
+                    ),
+                    Expanded(child: _buildLinkInput(theme)),
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: _buildWebView(context),
-            ),
-          ],
+              Expanded(
+                child: _buildWebView(context),
+              ),
+            ],
+          ),
         ),
       ),
     );
