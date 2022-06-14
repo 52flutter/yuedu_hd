@@ -62,7 +62,8 @@ class _PageStoreState extends State<PageStore> {
                   const Duration(seconds: 1)) {
             //两次点击间隔超过1秒则重新计时
             _lastPressed = DateTime.now();
-            if ((await _controller?.canGoBack()) == true) {
+            var canBack = await _controller?.canGoBack();
+            if (canBack == true) {
               await _controller?.goBack();
             } else {
               BotToast.showText(text: "再按一次退出");
