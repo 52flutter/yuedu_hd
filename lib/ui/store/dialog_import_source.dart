@@ -2,7 +2,7 @@
  * @Author: renjie.yin
  * @Date: 2022-05-16 09:22:41
  * @LastEditors: renjie.yin
- * @LastEditTime: 2022-05-16 14:04:14
+ * @LastEditTime: 2022-06-18 15:07:55
  * @Description: 
  */
 import 'package:flutter/material.dart';
@@ -54,10 +54,11 @@ class DialogImportSourceState extends State<DialogImportSource> {
       actions: [
         if (hasDone)
           TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('关闭')),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('关闭'),
+          ),
       ],
     );
   }
