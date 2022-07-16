@@ -223,7 +223,7 @@ class BookTocHelper {
 }
 
 List<BookChapterBean> _parseResponse(
-    String data, BookTocRuleBean ruleBean, String url) {
+    String data, BookTocRuleBean ruleBean, String url, TypeSendPort port) {
   var parser = HParser(data);
 
   List<BookChapterBean> result = [];
@@ -268,14 +268,16 @@ List<BookChapterBean> _parseResponse(
   return result;
 }
 
-String _parseNextUrl(String data, BookTocRuleBean ruleBean, String url) {
+String _parseNextUrl(
+    String data, BookTocRuleBean ruleBean, String url, TypeSendPort port) {
   var parser = HParser(data);
   var result = parser.parseRuleStrings(ruleBean.nextTocUrl);
   parser.destory();
   return result.isNotEmpty ? result[0] : "";
 }
 
-String _parseTocUrl(String data, BookInfoRuleBean ruleBean, String url) {
+String _parseTocUrl(
+    String data, BookInfoRuleBean ruleBean, String url, TypeSendPort port) {
   var parser = HParser(data);
   var result = parser.parseRuleStrings(ruleBean.tocUrl);
   parser.destory();

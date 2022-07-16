@@ -151,7 +151,8 @@ class BookContentHelper {
   }
 }
 
-String parseContent(String url, String html, BookContentRuleBean rule) {
+String parseContent(
+    String url, String html, BookContentRuleBean rule, TypeSendPort port) {
   developer.log('开始解析正文 $rule');
   var parser = HParser(html);
   var content = parser.parseRuleString(rule.content);
@@ -163,7 +164,7 @@ String parseContent(String url, String html, BookContentRuleBean rule) {
   return HParser.parseReplaceRule(content ?? "", rule.replaceRegex!);
 }
 
-String parseNextPage(String url, String html, String next) {
+String parseNextPage(String url, String html, String next, TypeSendPort port) {
   developer.log('解析下一页的链接 rule->$next');
   var parser = HParser(html);
   var result = parser.parseRuleStrings(next);

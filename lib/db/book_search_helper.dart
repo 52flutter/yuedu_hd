@@ -231,7 +231,7 @@ class BookSearchHelper {
   }
 }
 
-List<Map<String, dynamic>> _parse(Map map) {
+List<Map<String, dynamic>> _parse(Map map, TypeSendPort port) {
   String response = map['response'];
   String baseUrl = map['baseUrl'];
   BookSearchRuleBean ruleBean = BookSearchRuleBean();
