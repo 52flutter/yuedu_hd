@@ -96,6 +96,11 @@ class _PageBookShelfState extends State<PageBookShelf>
                   child: IgnorePointer(
                     child: TextButton.icon(
                       onPressed: () {},
+                      style: ButtonStyle(
+                        textStyle: ButtonStyleButton.allOrNull(
+                          TextStyle(color: theme.primaryColorDark),
+                        ),
+                      ),
                       icon: Icon(Icons.sort_outlined),
                       label: Text(currSortType == 0 ? '添加顺序' : '上次阅读'),
                     ),

@@ -2,7 +2,7 @@
  * @Author: renjie.yin
  * @Date: 2022-05-16 09:22:41
  * @LastEditors: renjie.yin
- * @LastEditTime: 2022-08-31 09:41:15
+ * @LastEditTime: 2022-08-31 18:33:21
  * @Description: 
  */
 import 'dart:io';
@@ -58,7 +58,11 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: YColors.background,
         canvasColor: YColors.background_input,
         accentColor: YColors.text_btn_color,
-        colorScheme: ColorScheme.light(secondary: YColors.text_btn_color),
+        colorScheme: ColorScheme.light(
+          secondary: YColors.text_btn_color,
+          primary: YColors.primary,
+          background: YColors.background,
+        ),
         // This makes the visual density adapt to the platform that you run
         // the app on. For desktop platforms, the controls will be smaller and
         // closer together (more dense) than on mobile platforms.
