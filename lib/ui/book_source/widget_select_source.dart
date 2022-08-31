@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yuedu_hd/db/BookSourceCombBean.dart';
@@ -7,7 +6,7 @@ import 'package:yuedu_hd/db/book_search_helper.dart';
 import 'package:yuedu_hd/db/book_toc_helper.dart';
 import 'package:yuedu_hd/db/databaseHelper.dart';
 
-class WidgetSelectSource extends StatefulWidget{
+class WidgetSelectSource extends StatefulWidget {
   final int bookId;
 
   WidgetSelectSource(this.bookId) : super(key: ValueKey(bookId));
@@ -32,7 +31,6 @@ class _WidgetSelectSourceState extends State<WidgetSelectSource> {
     super.initState();
   }
 
-
   @override
   void dispose() {
     BookSearchHelper.getInstance().cancelSearch('source');
@@ -50,27 +48,58 @@ class _WidgetSelectSourceState extends State<WidgetSelectSource> {
         height: 400,
         width: 300,
         color: theme.cardColor,
-        child:  Column(
+        child: Column(
           children: [
             Row(
               children: [
-                FlatButton.icon(icon: Icon(_searching?Icons.stop:CupertinoIcons.refresh,size: 18,),label: Text(_searching?'终止搜索书源':'重新搜索书源',style: theme.textTheme.bodyText1,),onPressed: (){
-                  _fetchMoreSource();
-                },),
+                TextButton.icon(
+                  icon: Icon(
+                    _searching ? Icons.stop : CupertinoIcons.refresh,
+                    size: 18,
+                  ),
+                  label: Text(
+                    _searching ? '终止搜索书源' : '重新搜索书源',
+                    style: theme.textTheme.bodyText1,
+                  ),
+                  onPressed: () {
+                    _fetchMoreSource();
+                  },
+                ),
                 Spacer(),
-                IconButton(icon: Icon(Icons.sync,size: 18,), onPressed: (){
-                  sourceList.clear();
-                  _fetchSourceList();
-                })
+                IconButton(
+                    icon: Icon(
+                      Icons.sync,
+                      size: 18,
+                    ),
+                    onPressed: () {
+                      sourceList.clear();
+                      _fetchSourceList();
+                    })
               ],
             ),
-            Divider(height: 1,thickness: 1,),
-            Visibility(visible: _searching,child: LinearProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColorLight),)),
+            Divider(
+              height: 1,
+              thickness: 1,
+            ),
+            Visibility(
+                visible: _searching,
+                child: LinearProgressIndicator(
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(theme.primaryColorLight),
+                )),
             Expanded(
               child: CupertinoScrollbar(
-                child: ListView.separated(shrinkWrap: true,itemBuilder: (ctx,index){
-                  return _buildItem(ctx, sourceList[index]);
-                },separatorBuilder: (c,i)=>Divider(height: 0.5,thickness: 0.5,),itemCount: sourceList.length,),
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  itemBuilder: (ctx, index) {
+                    return _buildItem(ctx, sourceList[index]);
+                  },
+                  separatorBuilder: (c, i) => Divider(
+                    height: 0.5,
+                    thickness: 0.5,
+                  ),
+                  itemCount: sourceList.length,
+                ),
               ),
             ),
           ],
@@ -79,10 +108,10 @@ class _WidgetSelectSourceState extends State<WidgetSelectSource> {
     );
   }
 
-  Widget _buildItem(BuildContext ctx,BookSourceCombBean bean){
+  Widget _buildItem(BuildContext ctx, BookSourceCombBean bean) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () async{
+      onTap: () async {
         await dbHelper.switchUsedSource(bean.bookid, bean.sourceid);
         Navigator.of(context).pop(bean.id);
       },
@@ -95,21 +124,27 @@ class _WidgetSelectSourceState extends State<WidgetSelectSource> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${bean.sourceBean?.bookSourceName}',maxLines: 2,overflow: TextOverflow.ellipsis,),
-                  Text('${bean.lastChapterName?? '正在获取目录~'}')
+                  Text(
+                    '${bean.sourceBean?.bookSourceName}',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text('${bean.lastChapterName ?? '正在获取目录~'}')
                 ],
               ),
             ),
-            if(bean.used == 1)
-              Icon(Icons.check,size: 20,)
+            if (bean.used == 1)
+              Icon(
+                Icons.check,
+                size: 20,
+              )
           ],
         ),
       ),
     );
   }
 
-  void _fetchSourceList() async{
-
+  void _fetchSourceList() async {
     var sources = await dbHelper.queryAllEnabledSource(widget.bookId);
     sourceList.addAll(sources);
     setState(() {
@@ -121,14 +156,17 @@ class _WidgetSelectSourceState extends State<WidgetSelectSource> {
     }
   }
 
-  void _fetchMoreSource() async{
+  void _fetchMoreSource() async {
     setState(() {
       _searching = true;
     });
     var book = await DatabaseHelper().queryBookById(widget.bookId);
-    await BookSearchHelper.getInstance().searchBookFromEnabledSource(book.name!, 'source',author: book.author,exactSearch: true,onBookSearch: (b){
-      var index =sourceList.indexWhere((element) => element.sourceid == b.source_id);
-      if(index == -1){
+    await BookSearchHelper.getInstance().searchBookFromEnabledSource(
+        book.name!, 'source', author: book.author, exactSearch: true,
+        onBookSearch: (b) {
+      var index =
+          sourceList.indexWhere((element) => element.sourceid == b.source_id);
+      if (index == -1) {
         //添加书源
         var t = BookSourceCombBean();
         t.sourceid = b.source_id!;
@@ -143,15 +181,19 @@ class _WidgetSelectSourceState extends State<WidgetSelectSource> {
     });
   }
 
-  dynamic updateChapter(BookSourceCombBean source) async{
-    if(!this.mounted){return;}
-    await BookTocHelper.getInstance().updateChapterList(source.bookid, source.sourceid,notUpdateDB: true,onlyLast: true,onCancelToken: (token){
+  dynamic updateChapter(BookSourceCombBean source) async {
+    if (!this.mounted) {
+      return;
+    }
+    await BookTocHelper.getInstance().updateChapterList(
+        source.bookid, source.sourceid, notUpdateDB: true, onlyLast: true,
+        onCancelToken: (token) {
       _cancelTokenList.add(token);
-    }).then((chapters){
+    }).then((chapters) {
       source.lastChapterName = chapters.last.name!;
       _countLock.release();
       _wantUpdateList();
-    }).catchError((e){
+    }).catchError((e) {
       _countLock.release();
       source.lastChapterName = '[X]目录解析异常';
       _wantUpdateList();
@@ -159,19 +201,18 @@ class _WidgetSelectSourceState extends State<WidgetSelectSource> {
   }
 
   //控制UI更新的间隔，IOS频繁更新UI特别卡顿
-  void _wantUpdateList(){
-    if(!this.mounted){
+  void _wantUpdateList() {
+    if (!this.mounted) {
       return;
     }
-    if(!_canPostUpdateUI){
+    if (!_canPostUpdateUI) {
       return;
     }
     _canPostUpdateUI = false;
-    Future.delayed(Duration(milliseconds: 500),(){
-      setState(() {
-
-      });
-    }).whenComplete((){_canPostUpdateUI = true;}
-    );
+    Future.delayed(Duration(milliseconds: 500), () {
+      setState(() {});
+    }).whenComplete(() {
+      _canPostUpdateUI = true;
+    });
   }
 }

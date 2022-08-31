@@ -1,11 +1,18 @@
-
+/*
+ * @Author: renjie.yin
+ * @Date: 2022-05-16 09:22:41
+ * @LastEditors: renjie.yin
+ * @LastEditTime: 2022-08-31 09:32:04
+ * @Description: 
+ */
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-class ColorPickerDialog extends StatefulWidget{
+class ColorPickerDialog extends StatefulWidget {
   final Color initColor;
 
-  const ColorPickerDialog({Key? key, required this.initColor}) : super(key: key);
+  const ColorPickerDialog({Key? key, required this.initColor})
+      : super(key: key);
   @override
   _ColorPickerDialogState createState() => _ColorPickerDialogState();
 }
@@ -24,6 +31,7 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
     pickerColor = widget.initColor;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -51,7 +59,7 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
         // ),
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: const Text('确定'),
           onPressed: () {
             Navigator.of(context).pop(pickerColor);

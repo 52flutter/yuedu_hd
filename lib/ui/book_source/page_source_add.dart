@@ -83,9 +83,9 @@ class _PageSourceAddState extends State<PageSourceAdd> {
                           child: Text(
                             '''
 书源的导入：
-方式一：在上方输入书源链接，点击按钮开始导入。
-方式二：复制配置文件内容到粘贴板，点击【粘贴板导入】按钮。
-暂不支持编辑和修改，同网址书源每次导入均覆盖内容。
+方式一：在上方输入书源链接,点击按钮开始导入。
+方式二：复制配置文件内容到粘贴板,点击【粘贴板导入】按钮。
+暂不支持编辑和修改,同网址书源每次导入均覆盖内容。
 规则参考:https://alanskycn.gitee.io/teachme
 推荐微信小程序[三目小仓库]获取书源
                           ''',
@@ -118,7 +118,7 @@ class _PageSourceAddState extends State<PageSourceAdd> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        FlatButton(
+        TextButton(
           onPressed: () {
             if (_textEditingController.text.trim().isEmpty) {
               _showHelpDialog(context);
@@ -128,24 +128,36 @@ class _PageSourceAddState extends State<PageSourceAdd> {
           },
           child: Text(
             '导入',
-            style: TextStyle(color: theme.accentColor),
+            style: TextStyle(color: theme.colorScheme.secondary),
           ),
-          color: theme.primaryColorDark,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+          style: ButtonStyle(
+            backgroundColor:
+                ButtonStyleButton.allOrNull(theme.primaryColorDark),
+            shape: ButtonStyleButton.allOrNull(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+            ),
+          ),
         ),
         HSpace(8),
-        FlatButton(
+        TextButton(
           onPressed: () {
             _fromClipboard();
           },
           child: Text(
             '粘贴板导入',
-            style: TextStyle(color: theme.accentColor),
+            style: TextStyle(color: theme.colorScheme.secondary),
           ),
-          color: theme.primaryColorDark,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+          style: ButtonStyle(
+            backgroundColor:
+                ButtonStyleButton.allOrNull(theme.primaryColorDark),
+            shape: ButtonStyleButton.allOrNull(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+            ),
+          ),
         ),
       ],
     );
@@ -164,7 +176,7 @@ class _PageSourceAddState extends State<PageSourceAdd> {
         maxLines: 1,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.all(0),
-          hintText: '输入网址，从网络导入',
+          hintText: '输入网址,从网络导入',
           prefixIconConstraints: BoxConstraints(minWidth: 30, maxHeight: 30),
           prefixIcon: Icon(
             Icons.link_outlined,
@@ -185,11 +197,11 @@ class _PageSourceAddState extends State<PageSourceAdd> {
           return AlertDialog(
             title: Text('书源帮助'),
             content: Text('''
-本APP不提供内容，只提供浏览服务，按照用户自定义的规则加载特定网站的网页。
+本APP不提供内容,只提供浏览服务,按照用户自定义的规则加载特定网站的网页。
 使用[阅读3.0]书源规则,不完全兼容[阅读2.0]规则
-仅支持JSOUP格式和CSS格式的书源，导入自动过滤
+仅支持JSOUP格式和CSS格式的书源,导入自动过滤
 参考:https://alanskycn.gitee.io/teachme/
-你可以从搜索引擎，gitee,github，酷安等社区获取别人分享的书源。
+你可以从搜索引擎,gitee,github,酷安等社区获取别人分享的书源。
 新手上路？点击使用热门书源,导入开始搜索!
 '''),
             actions: [

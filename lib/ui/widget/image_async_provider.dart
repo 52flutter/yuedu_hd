@@ -2,11 +2,10 @@
  * @Author: renjie.yin
  * @Date: 2022-05-16 09:22:41
  * @LastEditors: renjie.yin
- * @LastEditTime: 2022-05-16 14:14:34
+ * @LastEditTime: 2022-08-31 09:44:52
  * @Description: 
  */
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -60,8 +59,8 @@ class NetworkImageWithoutAuth extends ImageProvider<NetworkImageWithoutAuth> {
     final Uint8List bytes = await ImageApi.image(key.url);
     if (bytes.lengthInBytes == 0)
       throw Exception('NetworkImage is an empty file');
-
-    return PaintingBinding.instance.instantiateImageCodec(bytes);
+    var d = await ImmutableBuffer.fromUint8List(bytes);
+    return PaintingBinding.instance.instantiateImageCodecFromBuffer(d);
   }
 
   @override
