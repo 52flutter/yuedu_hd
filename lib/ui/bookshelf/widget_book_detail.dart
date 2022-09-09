@@ -272,7 +272,8 @@ class BookDetailState extends State<BookDetailWidget> {
                           _showSelectSource(context);
                         },
                         style: ButtonStyle(
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          tapTargetSize: MaterialTapTargetSize.padded,
+                          padding: ButtonStyleButton.allOrNull(EdgeInsets.zero),
                           backgroundColor:
                               ButtonStyleButton.allOrNull(theme.primaryColor),
                           textStyle: ButtonStyleButton.allOrNull(
@@ -327,7 +328,8 @@ class BookDetailState extends State<BookDetailWidget> {
                           style: TextStyle(color: theme.canvasColor),
                         ),
                         style: ButtonStyle(
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          tapTargetSize: MaterialTapTargetSize.padded,
+                          padding: ButtonStyleButton.allOrNull(EdgeInsets.zero),
                           backgroundColor:
                               ButtonStyleButton.allOrNull(theme.primaryColor),
                           textStyle: ButtonStyleButton.allOrNull(
