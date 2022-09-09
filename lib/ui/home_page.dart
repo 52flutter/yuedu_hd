@@ -1,8 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:yuedu_hd/ui/YDRouter.dart';
 import 'package:yuedu_hd/ui/book_source/page_source_add.dart';
 import 'package:yuedu_hd/ui/book_source/page_source_list.dart';
@@ -55,6 +52,11 @@ class HomeState extends State<HomePage> {
       backgroundColor: themeData.backgroundColor,
       body: WillPopScope(
         onWillPop: () async {
+          if (homeContainerKey.currentState != null &&
+              homeContainerKey.currentState!.canPop()) {
+            homeContainerKey.currentState?.pop();
+            return false;
+          }
           if (_lastPressed == null ||
               DateTime.now().difference(_lastPressed as DateTime) >
                   const Duration(seconds: 1)) {

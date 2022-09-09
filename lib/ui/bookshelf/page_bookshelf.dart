@@ -126,6 +126,7 @@ class _PageBookShelfState extends State<PageBookShelf>
                     child: Align(
                       alignment: Alignment.bottomRight,
                       child: FloatingActionButton(
+                        tooltip: "添加",
                         onPressed: () {
                           Navigator.of(context)
                               .pushNamed(YDRouter.BOOK_ADD)
@@ -333,7 +334,7 @@ class _PageBookShelfState extends State<PageBookShelf>
           .updateChapterList(book.bookId, book.sourceId)
           .then((value) => BotToast.showText(text: '${book.bookName} 更新成功'))
           .catchError((e) {
-        BotToast.showText(text: '${book.bookName} 更新失败\n$e');
+        BotToast.showText(text: '${book.bookName} 更新失败\n$e.message');
       }));
     }
     await Future.wait(futureList);

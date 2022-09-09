@@ -173,7 +173,10 @@ class BookDetailState extends State<BookDetailWidget> {
                                   TextStyle(color: theme.canvasColor),
                                 ),
                               ),
-                              child: Text('开始阅读'),
+                              child: Text(
+                                '开始阅读',
+                                style: TextStyle(color: theme.canvasColor),
+                              ),
                             ),
                           ),
                         ),
@@ -276,7 +279,10 @@ class BookDetailState extends State<BookDetailWidget> {
                             TextStyle(color: theme.canvasColor),
                           ),
                         ),
-                        child: Text('换源'),
+                        child: Text(
+                          '换源',
+                          style: TextStyle(color: theme.canvasColor),
+                        ),
                       )),
                 ],
               ),
@@ -316,7 +322,10 @@ class BookDetailState extends State<BookDetailWidget> {
                         onPressed: () {
                           _showChapters(context);
                         },
-                        child: Text('查看目录'),
+                        child: Text(
+                          '查看目录',
+                          style: TextStyle(color: theme.canvasColor),
+                        ),
                         style: ButtonStyle(
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           backgroundColor:
