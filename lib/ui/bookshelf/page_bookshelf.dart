@@ -212,7 +212,7 @@ class _PageBookShelfState extends State<PageBookShelf>
                 height: 120,
                 width: 100,
                 child: ExtendedImage.network(
-                  bean.coverUrl,
+                  bean.coverUrl.replaceAll(".jpghtml", ".jpg"),
                   width: 80,
                   height: 100,
                   retries: 1,

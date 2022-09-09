@@ -76,7 +76,7 @@ class BookDetailState extends State<BookDetailWidget> {
                         height: 120,
                         width: 96,
                         child: Image.network(
-                          bookDetail!.coverUrl!,
+                          bookDetail!.coverUrl!.replaceAll(".jpghtml", ".jpg"),
                           loadingBuilder: (BuildContext context, Widget child,
                               ImageChunkEvent? loadingProgress) {
                             if (loadingProgress == null) return child;

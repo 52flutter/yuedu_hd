@@ -1,8 +1,14 @@
-
+/*
+ * @Author: renjie.yin
+ * @Date: 2022-05-16 09:22:41
+ * @LastEditors: renjie.yin
+ * @LastEditTime: 2022-09-09 13:52:00
+ * @Description: 
+ */
 import 'package:yuedu_hd/db/BookSourceBean.dart';
 
-class BookInfoBean{
-  int id=0;
+class BookInfoBean {
+  int id = 0;
   String? name;
   String? author;
   String? bookUrl;
@@ -20,7 +26,6 @@ class BookInfoBean{
   int? source_id = -1;
   BookSourceBean? sourceBean;
   int sourceCount = 0;
-
 
   BookInfoBean();
 
@@ -40,36 +45,33 @@ class BookInfoBean{
   @override
   int get hashCode => name.hashCode ^ author.hashCode;
 
-
-  Map<String,dynamic> toMap(){
-    return{
-      '_id':id,
-      'name':name,
-      'author':author,
-      'bookUrl':bookUrl,
-      'coverUrl':coverUrl,
-      'intro':intro,
-      'kind':kind,
-      'lastChapter':lastChapter,
-      'wordCount':wordCount
+  Map<String, dynamic> toMap() {
+    return {
+      '_id': id,
+      'name': name,
+      'author': author,
+      'bookUrl': bookUrl,
+      'coverUrl': coverUrl,
+      'intro': intro,
+      'kind': kind,
+      'lastChapter': lastChapter,
+      'wordCount': wordCount
     };
   }
 
-
-  BookInfoBean.fromMap(Map map){
-    id = map['_id']??-1;
+  BookInfoBean.fromMap(Map map) {
+    id = map['_id'] ?? -1;
     name = map['name'];
     author = map['author'];
     bookUrl = map['bookUrl'];
-    coverUrl = map['coverUrl'];
+    coverUrl = map['coverUrl']?.toString()?.replaceAll(".jpghtml", ".jpg");
     intro = map['intro'];
     kind = map['kind'];
     lastChapter = map['lastChapter'];
     wordCount = map['wordCount'];
     lastReadChapter = map['lastReadChapter'];
-    groupId = map['groupId']??-1;
-    inbookShelf = map['inbookShelf']??0;
-    lastReadPage = map['lastReadPage']??1;
+    groupId = map['groupId'] ?? -1;
+    inbookShelf = map['inbookShelf'] ?? 0;
+    lastReadPage = map['lastReadPage'] ?? 1;
   }
-
 }
