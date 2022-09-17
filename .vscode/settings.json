@@ -5,8 +5,13 @@
     "eparser",
     "Hanzi",
     "hparser",
+    "inbook",
     "sqflite",
+    "tenabled",
+    "vsync",
     "wakelock",
+    "xurl",
+    "ycolors",
     "yuedu"
   ]
 }

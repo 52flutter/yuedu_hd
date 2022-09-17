@@ -61,7 +61,7 @@ class BookContentHelper {
 
     var contentRule = source.mapContentRuleBean();
     //请求网络
-    var charset = source.mapSearchUrlBean()!.charset;
+    // var charset = source.mapSearchUrlBean()!.charset;
     Options requestOptions = Options(
         contentType: ContentType.html.toString(),
         sendTimeout: 10000,
@@ -113,7 +113,7 @@ class BookContentHelper {
           bookUrl = null;
         }
       }
-      if (content == null || content.isEmpty) {
+      if (content.isEmpty) {
         throw Exception('正文请求成功 解析失败');
       }
       if (chapterId > 0) {
@@ -125,7 +125,7 @@ class BookContentHelper {
       return Future.error(e);
     }
 
-    return Future.value(null);
+    // return Future.value(null);
   }
 
   Future<String?> _request(Options requestOptions, String bookUrl) async {
@@ -147,7 +147,7 @@ class BookContentHelper {
       developer.log('正文请求错误[$bookUrl]:$e');
       return Future.error(Exception('正文请求错误[$bookUrl]:$e'));
     }
-    return Future.value(null);
+    // return Future.value(null);
   }
 }
 

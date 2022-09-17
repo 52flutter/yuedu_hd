@@ -1,9 +1,14 @@
-
-import 'package:flutter/cupertino.dart';
+/*
+ * @Author: renjie.yin
+ * @Date: 2022-05-16 09:22:41
+ * @LastEditors: renjie.yin
+ * @LastEditTime: 2022-09-14 09:37:02
+ * @Description: 
+ */
 import 'package:flutter/material.dart';
 import 'package:yuedu_hd/ui/download/BookDownloader.dart';
 
-class PageDownLoad extends StatelessWidget{
+class PageDownLoad extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +18,10 @@ class PageDownLoad extends StatelessWidget{
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('下载队列',style: Theme.of(context).textTheme.subtitle1,),
+            Text(
+              '下载队列',
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
             Divider(),
             Container(child: DownloadInfoWidget()),
           ],
@@ -21,11 +29,9 @@ class PageDownLoad extends StatelessWidget{
       ),
     );
   }
-
 }
 
-class DownloadInfoWidget extends StatefulWidget{
-
+class DownloadInfoWidget extends StatefulWidget {
   const DownloadInfoWidget({Key? key}) : super(key: key);
 
   @override
@@ -37,7 +43,7 @@ class _DownloadInfoWidgetState extends State<DownloadInfoWidget> {
   @override
   void initState() {
     downloader = BookDownloader.getInstance();
-    downloader.downLoadCallBack = (){
+    downloader.downLoadCallBack = () {
       setState(() {
         print('download!');
       });
@@ -47,20 +53,33 @@ class _DownloadInfoWidgetState extends State<DownloadInfoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
-    if(downloader.chapters.isEmpty){
-      return Container(child: Center(child: Text('没有下载任务...',style: Theme.of(context).textTheme.headline4,)));
+    var isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    if (downloader.chapters.isEmpty) {
+      return Container(
+          child: Center(
+              child: Text(
+        '没有下载任务...',
+        style: Theme.of(context).textTheme.headline4,
+      )));
     }
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.all(isLandscape?16:4),
+          padding: EdgeInsets.all(isLandscape ? 16 : 4),
           child: Row(
             children: [
-              Expanded(child: Text('${downloader.bookInfoBean!.name} 待缓存章节: ${downloader.chapters.length}',style: isLandscape?Theme.of(context).textTheme.headline5:null,)),
-              IconButton(icon: Icon(Icons.stop), onPressed: (){
-                downloader.stop();
-              })
+              Expanded(
+                  child: Text(
+                '${downloader.bookInfoBean!.name} 待缓存章节: ${downloader.chapters.length}',
+                style:
+                    isLandscape ? Theme.of(context).textTheme.headline5 : null,
+              )),
+              IconButton(
+                  icon: Icon(Icons.stop),
+                  onPressed: () {
+                    downloader.stop();
+                  })
             ],
           ),
         ),
@@ -71,7 +90,7 @@ class _DownloadInfoWidgetState extends State<DownloadInfoWidget> {
 
   @override
   void dispose() {
-    downloader.downLoadCallBack = (){};
+    downloader.downLoadCallBack = () {};
     super.dispose();
   }
 }

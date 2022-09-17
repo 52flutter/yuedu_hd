@@ -2,7 +2,7 @@
  * @Author: renjie.yin
  * @Date: 2022-05-16 09:22:41
  * @LastEditors: renjie.yin
- * @LastEditTime: 2022-09-05 09:00:17
+ * @LastEditTime: 2022-09-14 09:36:21
  * @Description: 
  */
 import 'dart:io';
@@ -17,8 +17,6 @@ import 'package:yuedu_hd/ui/style/ycolors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite/sqflite.dart';
-
-import 'ui/style/ycolors.dart';
 
 void main() async {
   if (Platform.isWindows || Platform.isLinux) {

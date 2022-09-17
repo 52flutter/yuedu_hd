@@ -2,7 +2,7 @@
  * @Author: renjie.yin
  * @Date: 2022-05-16 09:22:41
  * @LastEditors: renjie.yin
- * @LastEditTime: 2022-09-09 13:52:00
+ * @LastEditTime: 2022-09-14 09:33:51
  * @Description: 
  */
 import 'package:yuedu_hd/db/BookSourceBean.dart';
@@ -64,7 +64,7 @@ class BookInfoBean {
     name = map['name'];
     author = map['author'];
     bookUrl = map['bookUrl'];
-    coverUrl = map['coverUrl']?.toString()?.replaceAll(".jpghtml", ".jpg");
+    coverUrl = map['coverUrl']?.toString().replaceAll(".jpghtml", ".jpg");
     intro = map['intro'];
     kind = map['kind'];
     lastChapter = map['lastChapter'];
