@@ -320,6 +320,8 @@ class _PageBookShelfState extends State<PageBookShelf>
     var temp = await DatabaseHelper().queryBookInBookShelf(currSortType);
     _bookList.clear();
     _bookList.addAll(temp);
+
+    await Future.value(0);
     setState(() {});
     return Future.value(0);
   }
@@ -336,6 +338,7 @@ class _PageBookShelfState extends State<PageBookShelf>
       }));
     }
     await Future.wait(futureList);
+    await Future.value(0);
     await _fetchBookShelf();
     return Future.value(0);
   }

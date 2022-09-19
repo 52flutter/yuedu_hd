@@ -34,10 +34,13 @@ class BookContentHelper {
     return fetchContentFromNetwork(chapterId, nextChapterId);
   }
 
-  Future<String> fetchContentFromNetwork(int chapterId, int? nextChapterId,
-      {BookSourceBean? sourceBean,
-      String? chapterUrl,
-      String? nextChapterUrl}) async {
+  Future<String> fetchContentFromNetwork(
+    int chapterId,
+    int? nextChapterId, {
+    BookSourceBean? sourceBean,
+    String? chapterUrl,
+    String? nextChapterUrl,
+  }) async {
     BookSourceBean source;
     if (sourceBean == null) {
       source = await DatabaseHelper().queryBookSourceByChapterId(chapterId);
@@ -83,10 +86,11 @@ class BookContentHelper {
         }
         //解析内容
         String? c = await Executor().execute(
-            arg1: bookUrl,
-            arg2: htmlString,
-            arg3: contentRule,
-            fun3: parseContent);
+          arg1: bookUrl,
+          arg2: htmlString,
+          arg3: contentRule,
+          fun3: parseContent,
+        );
         String cNotEmpty = c ?? "";
         developer.log(
             '完成解析正文 $bookUrl -> ${cNotEmpty.substring(0, min(100, cNotEmpty.length))}...');

@@ -447,15 +447,38 @@ class _StateSourceList extends State<PageSourceList> {
     if (_selectCount == 0) {
       return;
     }
-    List<int> ids = [];
-    for (var value in bookSourceList) {
-      if (value.localSelect) {
-        ids.add(value.id!);
-      }
-    }
-    var helper = DatabaseHelper();
-    await helper.deleteBookSourceByIds(ids);
-    await _fetchListAndUpdate(null);
+    showDialog<Null>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return new AlertDialog(
+            title: new Text('删除书源也会删除对应书源的书籍,你确定删除吗?',
+                style: new TextStyle(fontSize: 17.0)),
+            actions: <Widget>[
+              new TextButton(
+                child: new Text('取消'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              new TextButton(
+                child: new Text('确定'),
+                onPressed: () async {
+                  List<int> ids = [];
+                  for (var value in bookSourceList) {
+                    if (value.localSelect) {
+                      ids.add(value.id!);
+                    }
+                  }
+                  var helper = DatabaseHelper();
+                  await helper.deleteBookSourceByIds(ids);
+                  await _fetchListAndUpdate(null);
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
   }
 
   void _verifySelect() async {
